@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/buttonChannelUpKey"
-        android:onClick="channelDownEvent"
+        android:onClick="channelDownKeyEvent"
         android:text="Channel down" />
 
     <Button
