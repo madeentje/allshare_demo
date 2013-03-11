@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabControls"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/buttonChannelUpKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="channelUpKeyEvent"
+        android:text="Channel up" />
+
+    <Button
+        android:id="@+id/buttonChannelDownKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/buttonChannelUpKey"
+        android:onClick="channelDownEvent"
+        android:text="Channel down" />
+
+    <Button
+        android:id="@+id/buttonVolumeUpKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonChannelDownKey"
+        android:layout_alignParentLeft="true"
+        android:onClick="volumeUpKeyEvent"
+        android:text="Volume up" />
+
+    <Button
+        android:id="@+id/buttonVolumeDownKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonChannelDownKey"
+        android:layout_alignBottom="@+id/buttonChannelDownKey"
+        android:layout_alignParentLeft="true"
+        android:onClick="volumeDownKeyEvent"
+        android:text="Volume down" />
+
+    <Button
+        android:id="@+id/buttonEnterKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonArrowDownKey"
+        android:layout_toLeftOf="@+id/buttonChannelDownKey"
+        android:onClick="enterKeyEvent"
+        android:text="Enter" />
+
+    <Button
+        android:id="@+id/buttonArrowUpKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonEnterKey"
+        android:layout_alignRight="@+id/buttonEnterKey"
+        android:onClick="arrowUpKeyEvent"
+        android:text="Up" />
+
+    <Button
+        android:id="@+id/buttonArrowDownKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/buttonArrowRightKey"
+        android:onClick="arrowDownKeyEvent"
+        android:text="Down" />
+
+    <Button
+        android:id="@+id/buttonArrowRightKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonArrowDownKey"
+        android:layout_alignLeft="@+id/buttonChannelDownKey"
+        android:onClick="arrowRightKeyEvent"
+        android:text="Right" />
+
+    <Button
+        android:id="@+id/buttonArrowLeftKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonArrowDownKey"
+        android:layout_toLeftOf="@+id/buttonEnterKey"
+        android:onClick="arrowLeftKeyEvent"
+        android:text="Left" />
+
+    <Button
+        android:id="@+id/buttonPowerOffKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="powerOffKeyEvent"
+        android:text="Power off" />
+
+    <Button
+        android:id="@+id/buttonSourceKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="sourceKeyEvent"
+        android:text="Source" />
+
+    <Button
+        android:id="@+id/buttonMuteKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonChannelDownKey"
+        android:layout_centerHorizontal="true"
+        android:onClick="muteKeyEvent"
+        android:text="Mute" />
+
+    <Button
+        android:id="@+id/buttonSmartHubKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonMenuKey"
+        android:layout_alignBottom="@+id/buttonMenuKey"
+        android:layout_alignParentLeft="true"
+        android:onClick="smartHubKeyEvent"
+        android:text="SmartHub" />
+
+    <Button
+        android:id="@+id/buttonExitKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonReturnKey"
+        android:layout_alignBottom="@+id/buttonReturnKey"
+        android:layout_alignRight="@+id/buttonArrowRightKey"
+        android:onClick="exitKeyEvent"
+        android:text="Exit" />
+
+    <Button
+        android:id="@+id/buttonInfoKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonArrowRightKey"
+        android:layout_alignRight="@+id/buttonArrowRightKey"
+        android:onClick="infoKeyEvent"
+        android:text="Info" />
+
+    <Button
+        android:id="@+id/buttonToolsKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonArrowLeftKey"
+        android:layout_toRightOf="@+id/buttonVolumeUpKey"
+        android:onClick="toolsKeyEvent"
+        android:text="Tools" />
+
+    <Button
+        android:id="@+id/buttonPreChKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonChannelDownKey"
+        android:layout_alignBottom="@+id/buttonChannelDownKey"
+        android:layout_alignLeft="@+id/buttonMuteKey"
+        android:onClick="preChKeyEvent"
+        android:text="Pre-ch" />
+
+    <Button
+        android:id="@+id/buttonReturnKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/buttonArrowDownKey"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@+id/buttonArrowDownKey"
+        android:onClick="returnKeyEvent"
+        android:text="Return" />
+
+    <Button
+        android:id="@+id/buttonMenuKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonSourceKey"
+        android:layout_marginBottom="22dp"
+        android:layout_toLeftOf="@+id/buttonEnterKey"
+        android:onClick="menuKeyEvent"
+        android:text="Menu" />
+
+    <Button
+        android:id="@+id/buttonChListKey"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonMenuKey"
+        android:layout_alignBottom="@+id/buttonMenuKey"
+        android:layout_alignParentRight="true"
+        android:onClick="chListKeyEvent"
+        android:text="Ch list" />
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabBrowser"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/buttonOpenWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="openWebPageEvent"
+        android:text="Go" />
+
+    <EditText
+        android:id="@+id/editTextBrowseTerm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/buttonSearchInternet"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/buttonOpenWebPage"
+        android:onClick="searchInternetEvent"
+        android:text="Search" />
+
+    <Button
+        android:id="@+id/buttonGoHomePage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editTextBrowseTerm"
+        android:onClick="goHomePageEvent"
+        android:text="Home" />
+
+    <Button
+        android:id="@+id/buttonCloseWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonSearchInternet"
+        android:layout_marginTop="48dp"
+        android:onClick="closeWebPageEvent"
+        android:text="Close" />
+
+</RelativeLayout>
