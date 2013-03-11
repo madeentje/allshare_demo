@@ -35,8 +35,6 @@ public class TouchListener implements OnTouchListener {
 
 			break;
 		case MotionEvent.ACTION_UP:
-			hasConsumedEvent = true;
-
 			deviceInteractionManager.execute(new TVCommand() {
 				@Override
 				public void execute(TVController tvController) {

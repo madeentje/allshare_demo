@@ -21,8 +21,8 @@ public class DeviceInteractionManager implements DeviceFinderObserver {
 		if (selectedDevice != null) {
 			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
 				tvController = (TVController) selectedDevice;
-				tvController.setEventListener(new EventListener());
 
+				tvController.setEventListener(new EventListener());
 				tvController.setResponseListener(new ResponseListener());
 
 				tvController.connect();
