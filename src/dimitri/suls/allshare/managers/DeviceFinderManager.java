@@ -35,8 +35,6 @@ public class DeviceFinderManager {
 	}
 
 	public List<Device> getDevices(DeviceType deviceType) {
-		devices = deviceFinder.getDevices(deviceType);
-
 		deviceFinder.setDeviceFinderEventListener(deviceType, new IDeviceFinderEventListener() {
 			@Override
 			public void onDeviceAdded(DeviceType deviceType, Device device, ERROR error) {
@@ -62,6 +60,8 @@ public class DeviceFinderManager {
 				}
 			}
 		});
+
+		devices = deviceFinder.getDevices(deviceType);
 
 		return devices;
 	}

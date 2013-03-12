@@ -23,26 +23,31 @@ import com.sec.android.allshare.control.TVController.RemoteKey;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.adapters.DeviceAdapter;
+import dimitri.suls.allshare.adapters.SongAdapter;
+import dimitri.suls.allshare.control.tv.TVCommand;
+import dimitri.suls.allshare.control.tv.TouchListener;
 import dimitri.suls.allshare.managers.DeviceFinderManager;
 import dimitri.suls.allshare.managers.DeviceFinderObserver;
 import dimitri.suls.allshare.managers.DeviceInteractionManager;
 import dimitri.suls.allshare.managers.ServiceProviderManager;
 import dimitri.suls.allshare.managers.ServiceProviderObserver;
-import dimitri.suls.allshare.tv.TVCommand;
-import dimitri.suls.allshare.tv.TouchListener;
+import dimitri.suls.allshare.media.MediaFinder;
+import dimitri.suls.allshare.media.Song;
 
 public class Main extends Activity implements DeviceFinderObserver, ServiceProviderObserver {
 
 	private ServiceProviderManager serviceProviderManager = null;
 	private DeviceFinderManager deviceFinderManager = null;
+	private MediaFinder mediaFinder = null;
 	private DeviceInteractionManager deviceInteractionManager = null;
 	private DeviceType selectedDeviceType = null;
-	private ListView listViewDevices = null;
-	private TextView textViewSelectedDevice = null;
-	private EditText editTextBrowseTerm = null;
 	private TabHost tabHostMain = null;
 	private View tabRemote = null;
 	private View tabMedia = null;
+	private ListView listViewDevices = null;
+	private TextView textViewSelectedDevice = null;
+	private EditText editTextBrowseTerm = null;
+	private ListView listViewSongs = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,33 +86,13 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	private void initializeViews() {
-		initializeListViewDevices();
-		initializeTextViewSelectedDevice();
-		initializeEditTextBrowseTerm();
 		initializeTabTouch();
 		initializeTabHostMain();
 		initializeTabHostRemote();
-	}
-
-	private void initializeListViewDevices() {
-		listViewDevices = (ListView) findViewById(R.id.listViewDevices);
-
-		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				Device selectedDevice = (Device) adapterView.getItemAtPosition(position);
-
-				deviceFinderManager.setSelectedDevice(selectedDevice);
-			}
-		});
-	}
-
-	private void initializeTextViewSelectedDevice() {
-		textViewSelectedDevice = (TextView) findViewById(R.id.textViewSelectedDevice);
-	}
-
-	private void initializeEditTextBrowseTerm() {
-		editTextBrowseTerm = (EditText) findViewById(R.id.editTextBrowseTerm);
+		initializeListViewDevices();
+		initializeTextViewSelectedDevice();
+		initializeEditTextBrowseTerm();
+		initializeListViewSongs();
 	}
 
 	private void initializeTabHostMain() {
@@ -156,10 +141,47 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 		tabHostRemote.addTab(tabSpecTouch);
 	}
 
+	// TODO: Add slider to adjust speed of motion-control.
+
 	private void initializeTabTouch() {
 		View tabTouch = findViewById(R.id.tabTouch);
 
 		tabTouch.setOnTouchListener(new TouchListener(deviceInteractionManager));
+	}
+
+	private void initializeListViewDevices() {
+		listViewDevices = (ListView) findViewById(R.id.listViewDevices);
+
+		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+				Device selectedDevice = (Device) adapterView.getItemAtPosition(position);
+
+				deviceFinderManager.setSelectedDevice(selectedDevice);
+			}
+		});
+	}
+
+	private void initializeTextViewSelectedDevice() {
+		textViewSelectedDevice = (TextView) findViewById(R.id.textViewSelectedDevice);
+	}
+
+	private void initializeEditTextBrowseTerm() {
+		editTextBrowseTerm = (EditText) findViewById(R.id.editTextBrowseTerm);
+	}
+
+	private void initializeListViewSongs() {
+		listViewSongs = (ListView) findViewById(R.id.listViewSongs);
+
+		listViewSongs.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+				// TODO: Finish this.
+				Song selectedSong = (Song) adapterView.getItemAtPosition(position);
+
+				mediaFinder.play(selectedSong);
+			}
+		});
 	}
 
 	private void refreshDeviceList(DeviceType deviceType) {
@@ -170,16 +192,28 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 		deviceFinderManager.setSelectedDevice(null);
 	}
 
+	private void refreshSongList() {
+		List<Song> songs = mediaFinder.getSongs();
+		SongAdapter songAdapter = new SongAdapter(this, songs);
+
+		listViewSongs.setAdapter(songAdapter);
+		mediaFinder.setSelectedSong(null);
+	}
+
 	@Override
 	public void createdServiceProvider() {
 		deviceFinderManager = new DeviceFinderManager(serviceProviderManager);
 		deviceFinderManager.addObserver(this);
 
+		mediaFinder = new MediaFinder(this, serviceProviderManager);
+		mediaFinder.addObserver(this);
+
 		deviceInteractionManager = new DeviceInteractionManager(deviceFinderManager);
 
-		refreshDeviceList(selectedDeviceType);
-
 		initializeTabTouch();
+
+		refreshDeviceList(selectedDeviceType);
+		refreshSongList();
 	}
 
 	@Override
@@ -196,6 +230,13 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 
 			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
 				tabRemote.setEnabled(true);
+			}
+
+			// TODO: Add AVPlayers in the devicesList
+			// if (selectedDevice.getDeviceType() == DeviceType.DEVICE_AVPLAYER)
+			// {
+			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
+				tabMedia.setEnabled(true);
 			}
 		}
 	}
@@ -370,5 +411,25 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 				tvController.goHomePage();
 			}
 		});
+	}
+
+	public void playSongEvent(View view) {
+		mediaFinder.playSong();
+	}
+
+	public void playVideoEvent(View view) {
+		mediaFinder.playVideo();
+	}
+
+	public void pauseEvent(View view) {
+		mediaFinder.pause();
+	}
+
+	public void resumeEvent(View view) {
+		mediaFinder.resume();
+	}
+
+	public void stopEvent(View view) {
+		mediaFinder.stop();
 	}
 }

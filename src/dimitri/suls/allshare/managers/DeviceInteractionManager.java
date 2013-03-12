@@ -4,13 +4,13 @@ import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Device.DeviceType;
 import com.sec.android.allshare.control.TVController;
 
-import dimitri.suls.allshare.tv.EventListener;
-import dimitri.suls.allshare.tv.ResponseListener;
-import dimitri.suls.allshare.tv.TVCommand;
+import dimitri.suls.allshare.control.tv.EventListener;
+import dimitri.suls.allshare.control.tv.ResponseListener;
+import dimitri.suls.allshare.control.tv.TVCommand;
 
 public class DeviceInteractionManager implements DeviceFinderObserver {
 
-	private TVController tvController;
+	private Device selectedDevice;
 
 	public DeviceInteractionManager(DeviceFinderManager deviceFinderManager) {
 		deviceFinderManager.addObserver(this);
@@ -18,9 +18,11 @@ public class DeviceInteractionManager implements DeviceFinderObserver {
 
 	@Override
 	public void changedSelectedDevice(Device selectedDevice) {
+		this.selectedDevice = selectedDevice;
+
 		if (selectedDevice != null) {
 			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
-				tvController = (TVController) selectedDevice;
+				TVController tvController = (TVController) selectedDevice;
 
 				tvController.setEventListener(new EventListener());
 				tvController.setResponseListener(new ResponseListener());
@@ -39,6 +41,6 @@ public class DeviceInteractionManager implements DeviceFinderObserver {
 	}
 
 	public void execute(TVCommand tvCommand) {
-		tvCommand.execute(tvController);
+		tvCommand.execute((TVController) selectedDevice);
 	}
 }
