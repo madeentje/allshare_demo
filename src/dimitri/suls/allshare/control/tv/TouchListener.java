@@ -7,8 +7,8 @@ import android.view.View.OnTouchListener;
 import com.sec.android.allshare.Device;
 import com.sec.android.allshare.control.TVController;
 
-import dimitri.suls.allshare.device.DeviceCommand;
-import dimitri.suls.allshare.device.DeviceManager;
+import dimitri.suls.allshare.managers.device.DeviceCommand;
+import dimitri.suls.allshare.managers.device.DeviceManager;
 
 public class TouchListener implements OnTouchListener {
 	private DeviceManager deviceManager = null;

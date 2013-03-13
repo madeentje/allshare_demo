@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.device;
+package dimitri.suls.allshare.managers.device;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.sec.android.allshare.control.TVController;
 
 import dimitri.suls.allshare.control.tv.EventListener;
 import dimitri.suls.allshare.control.tv.ResponseListener;
-import dimitri.suls.allshare.serviceprovider.ServiceProviderManager;
+import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 
 public class DeviceManager {
 	private List<DeviceObserver> deviceObservers = null;

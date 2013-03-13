@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.adapters;
+package dimitri.suls.allshare.gui.listadapters;
 
 import java.util.List;
 

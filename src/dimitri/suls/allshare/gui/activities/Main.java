@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.activities;
+package dimitri.suls.allshare.gui.activities;
 
 import java.util.List;
 
@@ -22,15 +22,15 @@ import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
 
 import dimitri.suls.allshare.R;
-import dimitri.suls.allshare.adapters.DeviceAdapter;
 import dimitri.suls.allshare.control.tv.TouchListener;
-import dimitri.suls.allshare.device.DeviceCommand;
-import dimitri.suls.allshare.device.DeviceManager;
-import dimitri.suls.allshare.device.DeviceObserver;
+import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
+import dimitri.suls.allshare.managers.device.DeviceCommand;
+import dimitri.suls.allshare.managers.device.DeviceManager;
+import dimitri.suls.allshare.managers.device.DeviceObserver;
+import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
+import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
 import dimitri.suls.allshare.media.MediaFinder;
 import dimitri.suls.allshare.media.Song;
-import dimitri.suls.allshare.serviceprovider.ServiceProviderManager;
-import dimitri.suls.allshare.serviceprovider.ServiceProviderObserver;
 
 public class Main extends Activity implements DeviceObserver, ServiceProviderObserver {
 

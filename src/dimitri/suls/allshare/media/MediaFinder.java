@@ -16,7 +16,7 @@ import com.sec.android.allshare.Item.LocalContentBuilder;
 import com.sec.android.allshare.media.AVPlayer;
 import com.sec.android.allshare.media.ContentInfo;
 
-import dimitri.suls.allshare.serviceprovider.ServiceProviderManager;
+import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 
 public class MediaFinder {
 	private Context context;
