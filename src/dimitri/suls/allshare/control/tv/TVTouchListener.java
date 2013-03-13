@@ -4,19 +4,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-import com.sec.android.allshare.Device;
 import com.sec.android.allshare.control.TVController;
 
 import dimitri.suls.allshare.managers.device.DeviceCommand;
 import dimitri.suls.allshare.managers.device.DeviceManager;
 
-public class TouchListener implements OnTouchListener {
-	private DeviceManager deviceManager = null;
+public class TVTouchListener implements OnTouchListener {
+	private DeviceManager<TVController> tvDeviceManager = null;
 	private int previousPositionX = 0;
 	private int previousPositionY = 0;
 
-	public TouchListener(DeviceManager deviceManager) {
-		this.deviceManager = deviceManager;
+	public TVTouchListener(DeviceManager<TVController> tvDeviceManager) {
+		this.tvDeviceManager = tvDeviceManager;
 	}
 
 	@Override
@@ -28,11 +27,9 @@ public class TouchListener implements OnTouchListener {
 
 		switch (motionEvent.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			deviceManager.execute(new DeviceCommand() {
+			tvDeviceManager.execute(new DeviceCommand<TVController>() {
 				@Override
-				public void execute(Device selectedDevice) {
-					TVController tvController = (TVController) selectedDevice;
-
+				public void execute(TVController tvController) {
 					tvController.sendTouchDown();
 				}
 
@@ -40,11 +37,9 @@ public class TouchListener implements OnTouchListener {
 
 			break;
 		case MotionEvent.ACTION_UP:
-			deviceManager.execute(new DeviceCommand() {
+			tvDeviceManager.execute(new DeviceCommand<TVController>() {
 				@Override
-				public void execute(Device selectedDevice) {
-					TVController tvController = (TVController) selectedDevice;
-
+				public void execute(TVController tvController) {
 					tvController.sendTouchUp();
 				}
 			});
@@ -56,11 +51,9 @@ public class TouchListener implements OnTouchListener {
 			final int differenceBetweenCurrentAndPreviousPositionX = (currentPositionX - previousPositionX) * 2;
 			final int differenceBetweenCurrentAndPreviousPositionY = (currentPositionY - previousPositionY) * 2;
 
-			deviceManager.execute(new DeviceCommand() {
+			tvDeviceManager.execute(new DeviceCommand<TVController>() {
 				@Override
-				public void execute(Device selectedDevice) {
-					TVController tvController = (TVController) selectedDevice;
-
+				public void execute(TVController tvController) {
 					tvController.sendTouchMove(differenceBetweenCurrentAndPreviousPositionX, differenceBetweenCurrentAndPreviousPositionY);
 				}
 			});

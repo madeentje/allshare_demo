@@ -10,38 +10,41 @@ import com.sec.android.allshare.DeviceFinder.IDeviceFinderEventListener;
 import com.sec.android.allshare.ERROR;
 import com.sec.android.allshare.control.TVController;
 
-import dimitri.suls.allshare.control.tv.EventListener;
-import dimitri.suls.allshare.control.tv.ResponseListener;
+import dimitri.suls.allshare.control.tv.TVEventListener;
+import dimitri.suls.allshare.control.tv.TVResponseListener;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 
-public class DeviceManager {
-	private List<DeviceObserver> deviceObservers = null;
+public class DeviceManager<T extends Device> {
+	private List<DeviceObserver<T>> deviceObservers = null;
+	private DeviceType deviceType = null;
 	private DeviceFinder deviceFinder = null;
 	private List<Device> devices = null;
-	private Device selectedDevice = null;
+	private T selectedDevice = null;
 
-	public DeviceManager(ServiceProviderManager serviceProviderManager) {
-		this.deviceObservers = new ArrayList<DeviceObserver>();
+	public DeviceManager(DeviceType deviceType, ServiceProviderManager serviceProviderManager) {
+		this.deviceObservers = new ArrayList<DeviceObserver<T>>();
+		this.deviceType = deviceType;
 		this.deviceFinder = serviceProviderManager.getDeviceFinder();
 	}
 
-	public void addObserver(DeviceObserver deviceObserver) {
+	public void addObserver(DeviceObserver<T> deviceObserver) {
 		deviceObservers.add(deviceObserver);
 	}
 
-	public void removeObserver(DeviceObserver deviceObserver) {
+	public void removeObserver(DeviceObserver<T> deviceObserver) {
 		deviceObservers.remove(deviceObserver);
 	}
 
-	public void setSelectedDevice(Device selectedDevice) {
+	public void setSelectedDevice(T selectedDevice) {
 		this.selectedDevice = selectedDevice;
 
 		if (selectedDevice != null) {
+			// TODO: Finish adding other devicetypes
 			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
 				TVController tvController = (TVController) selectedDevice;
 
-				tvController.setEventListener(new EventListener());
-				tvController.setResponseListener(new ResponseListener());
+				tvController.setEventListener(new TVEventListener());
+				tvController.setResponseListener(new TVResponseListener());
 
 				tvController.connect();
 			}
@@ -50,8 +53,9 @@ public class DeviceManager {
 		notifySelectedDeviceHasChanged();
 	}
 
-	public List<Device> getDevices(DeviceType deviceType) {
+	public List<Device> getDevices() {
 		deviceFinder.setDeviceFinderEventListener(deviceType, new IDeviceFinderEventListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onDeviceAdded(DeviceType deviceType, Device device, ERROR error) {
 				devices.add(device);
@@ -62,14 +66,15 @@ public class DeviceManager {
 				// the app is already started
 				// TODO: Add a "retry"-button so the user can activate the Wi-FI
 				// without having to restart the app.
-				notifyDeviceWasAdded(device);
+				notifyDeviceWasAdded((T) device);
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onDeviceRemoved(DeviceType deviceType, Device device, ERROR error) {
 				devices.remove(device);
 
-				notifyDeviceWasRemoved(device);
+				notifyDeviceWasRemoved((T) device);
 
 				if (device == selectedDevice) {
 					setSelectedDevice(null);
@@ -83,24 +88,24 @@ public class DeviceManager {
 	}
 
 	private void notifySelectedDeviceHasChanged() {
-		for (DeviceObserver deviceObserver : deviceObservers) {
+		for (DeviceObserver<T> deviceObserver : deviceObservers) {
 			deviceObserver.changedSelectedDevice(selectedDevice);
 		}
 	}
 
-	private void notifyDeviceWasAdded(Device device) {
-		for (DeviceObserver deviceObserver : deviceObservers) {
+	private void notifyDeviceWasAdded(T device) {
+		for (DeviceObserver<T> deviceObserver : deviceObservers) {
 			deviceObserver.addedDevice(device);
 		}
 	}
 
-	private void notifyDeviceWasRemoved(Device device) {
-		for (DeviceObserver deviceObserver : deviceObservers) {
+	private void notifyDeviceWasRemoved(T device) {
+		for (DeviceObserver<T> deviceObserver : deviceObservers) {
 			deviceObserver.removedDevice(device);
 		}
 	}
 
-	public void execute(DeviceCommand deviceCommand) {
+	public void execute(DeviceCommand<T> deviceCommand) {
 		deviceCommand.execute(selectedDevice);
 	}
 }

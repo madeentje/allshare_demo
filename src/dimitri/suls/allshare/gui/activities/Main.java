@@ -18,26 +18,28 @@ import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Device.DeviceType;
+import com.sec.android.allshare.Item;
 import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
+import com.sec.android.allshare.media.AVPlayer;
 
 import dimitri.suls.allshare.R;
-import dimitri.suls.allshare.control.tv.TouchListener;
+import dimitri.suls.allshare.control.tv.TVTouchListener;
 import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
+import dimitri.suls.allshare.gui.listadapters.MediaItemAdapter;
 import dimitri.suls.allshare.managers.device.DeviceCommand;
 import dimitri.suls.allshare.managers.device.DeviceManager;
 import dimitri.suls.allshare.managers.device.DeviceObserver;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
 import dimitri.suls.allshare.media.MediaFinder;
-import dimitri.suls.allshare.media.Song;
 
-public class Main extends Activity implements DeviceObserver, ServiceProviderObserver {
+public class Main extends Activity implements DeviceObserver<TVController>, ServiceProviderObserver {
 
 	private ServiceProviderManager serviceProviderManager = null;
-	private DeviceManager deviceManager = null;
+	private DeviceManager<TVController> tvDeviceManager = null;
+	private DeviceManager<AVPlayer> avPlayerDeviceManager = null;
 	private MediaFinder mediaFinder = null;
-	private DeviceType selectedDeviceType = null;
 	private TabHost tabHostMain = null;
 	private View tabRemote = null;
 	private View tabMedia = null;
@@ -53,7 +55,7 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 
 		initializeViews();
 
-		selectedDeviceType = DeviceType.DEVICE_TV_CONTROLLER;
+		mediaFinder = new MediaFinder(this);
 
 		try {
 			serviceProviderManager = new ServiceProviderManager(this);
@@ -143,7 +145,7 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	private void initializeTabTouch() {
 		View tabTouch = findViewById(R.id.tabTouch);
 
-		tabTouch.setOnTouchListener(new TouchListener(deviceManager));
+		tabTouch.setOnTouchListener(new TVTouchListener(tvDeviceManager));
 	}
 
 	private void initializeListViewDevices() {
@@ -152,9 +154,9 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 		listViewDevices.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				Device selectedDevice = (Device) adapterView.getItemAtPosition(position);
+				TVController selectedDevice = (TVController) adapterView.getItemAtPosition(position);
 
-				deviceManager.setSelectedDevice(selectedDevice);
+				tvDeviceManager.setSelectedDevice(selectedDevice);
 			}
 		});
 	}
@@ -174,77 +176,70 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 				// TODO: Finish this.
-				Song selectedSong = (Song) adapterView.getItemAtPosition(position);
+				Item selectedSong = (Item) adapterView.getItemAtPosition(position);
 
 				// mediaFinder.play(selectedSong);
 			}
 		});
+
+		refreshSongList();
 	}
 
-	private void refreshDeviceList(DeviceType deviceType) {
-		List<Device> devices = deviceManager.getDevices(deviceType);
+	private void refreshDeviceList() {
+		List<Device> devices = tvDeviceManager.getDevices();
 		DeviceAdapter deviceAdapter = new DeviceAdapter(this, devices);
 
 		listViewDevices.setAdapter(deviceAdapter);
-		deviceManager.setSelectedDevice(null);
+		tvDeviceManager.setSelectedDevice(null);
 	}
 
 	private void refreshSongList() {
-		// List<Song> songs = mediaFinder.getSongs();
-		// SongAdapter songAdapter = new SongAdapter(this, songs);
+		List<Item> songs = mediaFinder.findAllSongsOnExternalStorageOfDevice();
+		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(this, songs);
 
-		// listViewSongs.setAdapter(songAdapter);
+		listViewSongs.setAdapter(mediaItemAdapter);
+		// TODO: Implement observers for mediaItems, just like with devices.
 		// mediaFinder.setSelectedSong(null);
 	}
 
 	@Override
 	public void createdServiceProvider() {
-		deviceManager = new DeviceManager(serviceProviderManager);
-		deviceManager.addObserver(this);
-
-		mediaFinder = new MediaFinder(this, serviceProviderManager);
-		// mediaFinder.addObserver(this);
+		tvDeviceManager = new DeviceManager<TVController>(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
+		tvDeviceManager.addObserver(this);
 
 		initializeTabTouch();
 
-		refreshDeviceList(selectedDeviceType);
-		refreshSongList();
+		refreshDeviceList();
 	}
 
 	@Override
-	public void changedSelectedDevice(Device selectedDevice) {
+	public void changedSelectedDevice(TVController selectedDevice) {
 		if (selectedDevice == null) {
-			textViewSelectedDevice.setText("No device selected.");
+			textViewSelectedDevice.setText("No TV-controller selected.");
 
 			tabHostMain.setCurrentTab(0);
 
 			tabRemote.setEnabled(false);
-			tabMedia.setEnabled(false);
+			// tabMedia.setEnabled(false);
 		} else {
-			textViewSelectedDevice.setText("Selected device: " + selectedDevice.getName());
+			textViewSelectedDevice.setText("Selected TV-controller: " + selectedDevice.getName());
 
-			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
-				tabRemote.setEnabled(true);
-			}
+			tabRemote.setEnabled(true);
 
 			// TODO: Add AVPlayers in the devicesList
-			// if (selectedDevice.getDeviceType() == DeviceType.DEVICE_AVPLAYER)
-			// {
-			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
-				tabMedia.setEnabled(true);
-			}
+			// tabMedia.setEnabled(true);
 		}
 	}
 
 	@Override
-	public void addedDevice(Device device) {
+	public void addedDevice(TVController device) {
 		DeviceAdapter arrayAdapter = (DeviceAdapter) listViewDevices.getAdapter();
 
 		arrayAdapter.add(device);
 	}
 
 	@Override
-	public void removedDevice(Device device) {
+	public void removedDevice(TVController device) {
 		DeviceAdapter arrayAdapter = (DeviceAdapter) listViewDevices.getAdapter();
 
 		arrayAdapter.remove(device);
@@ -253,15 +248,13 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	// TODO: Add button to disconnect from the selected device
 
 	public void refreshDeviceListEvent(View view) {
-		refreshDeviceList(selectedDeviceType);
+		refreshDeviceList();
 	}
 
 	private void sendRemoteKey(final RemoteKey remoteKey) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
+			public void execute(TVController tvController) {
 				tvController.sendRemoteKey(remoteKey);
 			}
 		});
@@ -348,11 +341,9 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	}
 
 	public void sendTouchClickEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
+			public void execute(TVController tvController) {
 				tvController.sendTouchClick();
 			}
 		});
@@ -361,10 +352,9 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	// TODO: Add more buttons for numeric keys/dash, play-keys, color-keys, ..
 
 	public void openWebPageEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
+			public void execute(TVController tvController) {
 				String URL = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage(URL);
@@ -373,10 +363,9 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	}
 
 	public void searchInternetEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
+			public void execute(TVController tvController) {
 				String searchTerm = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage("http://www.google.com/search?q=" + searchTerm);
@@ -385,10 +374,9 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	}
 
 	public void sendKeyboardStringEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
+			public void execute(TVController tvController) {
 				String text = editTextBrowseTerm.getText().toString();
 
 				tvController.sendKeyboardString(text);
@@ -398,44 +386,47 @@ public class Main extends Activity implements DeviceObserver, ServiceProviderObs
 	}
 
 	public void closeWebPageEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
+			public void execute(TVController tvController) {
 				tvController.closeWebPage();
 			}
 		});
 	}
 
 	public void goHomePageEvent(View view) {
-		deviceManager.execute(new DeviceCommand() {
+		tvDeviceManager.execute(new DeviceCommand<TVController>() {
 			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
+			public void execute(TVController tvController) {
 				tvController.goHomePage();
 			}
 		});
 	}
 
 	public void playSongEvent(View view) {
-		mediaFinder.playSong();
+		// mediaFinder.playSong();
+
+		// ContentInfo contentInfo = new ContentInfo.Builder().build();
+
+		// avPlayer.play(item, contentInfo);
+		// avPlayer.pause();
+		// avPlayer.resume();
+		// avPlayer.stop();
 	}
 
 	public void playVideoEvent(View view) {
-		mediaFinder.playVideo();
+		// mediaFinder.playVideo();
 	}
 
 	public void pauseEvent(View view) {
-		mediaFinder.pause();
+		// mediaFinder.pause();
 	}
 
 	public void resumeEvent(View view) {
-		mediaFinder.resume();
+		// mediaFinder.resume();
 	}
 
 	public void stopEvent(View view) {
-		mediaFinder.stop();
+		// mediaFinder.stop();
 	}
 }

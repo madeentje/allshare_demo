@@ -6,7 +6,7 @@ import com.sec.android.allshare.control.TVController.BrowserMode;
 import com.sec.android.allshare.control.TVController.IResponseListener;
 import com.sec.android.allshare.control.TVController.TVInformation;
 
-public class ResponseListener implements IResponseListener {
+public class TVResponseListener implements IResponseListener {
 	@Override
 	public void onBrowserScrollDownResponseReceived(TVController tv, ERROR result) {
 		// TODO Auto-generated method stub
