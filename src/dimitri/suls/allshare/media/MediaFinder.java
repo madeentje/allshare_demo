@@ -49,7 +49,7 @@ public class MediaFinder {
 		LocalContentBuilder localContentBuilder = null;
 		Item item = null;
 
-		if (cursor.moveToNext()) {
+		while (cursor.moveToNext()) {
 			filePath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 			mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
 			title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));

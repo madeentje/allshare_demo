@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.sec.android.allshare.Device;
 
 public class DeviceAdapter extends ArrayAdapter<Device> {
-
 	public DeviceAdapter(Context context, List<Device> objects) {
 		super(context, 0, objects);
 	}

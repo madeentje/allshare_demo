@@ -22,6 +22,7 @@ import com.sec.android.allshare.Item;
 import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
+import com.sec.android.allshare.media.ContentInfo;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.control.tv.TVTouchListener;
@@ -34,8 +35,7 @@ import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
 import dimitri.suls.allshare.media.MediaFinder;
 
-public class Main extends Activity implements DeviceObserver<TVController>, ServiceProviderObserver {
-
+public class Main extends Activity implements ServiceProviderObserver, DeviceObserver<TVController> {
 	private ServiceProviderManager serviceProviderManager = null;
 	private DeviceManager<TVController> tvDeviceManager = null;
 	private DeviceManager<AVPlayer> avPlayerDeviceManager = null;
@@ -53,9 +53,9 @@ public class Main extends Activity implements DeviceObserver<TVController>, Serv
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		initializeViews();
-
 		mediaFinder = new MediaFinder(this);
+
+		initializeViews();
 
 		try {
 			serviceProviderManager = new ServiceProviderManager(this);
@@ -176,9 +176,20 @@ public class Main extends Activity implements DeviceObserver<TVController>, Serv
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 				// TODO: Finish this.
-				Item selectedSong = (Item) adapterView.getItemAtPosition(position);
+				final Item selectedSong = (Item) adapterView.getItemAtPosition(position);
+				final ContentInfo contentInfo = new ContentInfo.Builder().build();
 
-				// mediaFinder.play(selectedSong);
+				List<Device> avPlayers = avPlayerDeviceManager.getDevices();
+				AVPlayer avPlayer = (AVPlayer) avPlayers.get(0);
+
+				avPlayerDeviceManager.setSelectedDevice(avPlayer);
+
+				avPlayerDeviceManager.execute(new DeviceCommand<AVPlayer>() {
+					@Override
+					public void execute(AVPlayer selectedDevice) {
+						selectedDevice.play(selectedSong, contentInfo);
+					}
+				});
 			}
 		});
 
@@ -207,6 +218,10 @@ public class Main extends Activity implements DeviceObserver<TVController>, Serv
 		tvDeviceManager = new DeviceManager<TVController>(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
 		tvDeviceManager.addObserver(this);
 
+		avPlayerDeviceManager = new DeviceManager<AVPlayer>(DeviceType.DEVICE_AVPLAYER, serviceProviderManager);
+		// TODO: Fix implement same interface multiple times!!!
+		// avPlayerDeviceManager.addObserver(this);
+
 		initializeTabTouch();
 
 		refreshDeviceList();
@@ -227,7 +242,7 @@ public class Main extends Activity implements DeviceObserver<TVController>, Serv
 			tabRemote.setEnabled(true);
 
 			// TODO: Add AVPlayers in the devicesList
-			// tabMedia.setEnabled(true);
+			tabMedia.setEnabled(true);
 		}
 	}
 
@@ -404,11 +419,6 @@ public class Main extends Activity implements DeviceObserver<TVController>, Serv
 	}
 
 	public void playSongEvent(View view) {
-		// mediaFinder.playSong();
-
-		// ContentInfo contentInfo = new ContentInfo.Builder().build();
-
-		// avPlayer.play(item, contentInfo);
 		// avPlayer.pause();
 		// avPlayer.resume();
 		// avPlayer.stop();
