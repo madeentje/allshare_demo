@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.managers;
+package dimitri.suls.allshare.serviceprovider;
 
 public interface ServiceProviderObserver {
 	void createdServiceProvider();

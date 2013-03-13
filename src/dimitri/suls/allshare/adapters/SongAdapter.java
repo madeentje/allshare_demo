@@ -24,7 +24,7 @@ public class SongAdapter extends ArrayAdapter<Song> {
 		}
 
 		// TODO: Show song titel
-		textView.setText(song);
+		textView.setText(song.toString());
 		textView.setTextSize(20);
 		textView.setPadding(10, 10, 10, 10);
 

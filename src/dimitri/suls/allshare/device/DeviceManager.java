@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.managers;
+package dimitri.suls.allshare.device;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,28 +8,44 @@ import com.sec.android.allshare.Device.DeviceType;
 import com.sec.android.allshare.DeviceFinder;
 import com.sec.android.allshare.DeviceFinder.IDeviceFinderEventListener;
 import com.sec.android.allshare.ERROR;
+import com.sec.android.allshare.control.TVController;
 
-public class DeviceFinderManager {
-	private List<DeviceFinderObserver> deviceFinderObservers = null;
+import dimitri.suls.allshare.control.tv.EventListener;
+import dimitri.suls.allshare.control.tv.ResponseListener;
+import dimitri.suls.allshare.serviceprovider.ServiceProviderManager;
+
+public class DeviceManager {
+	private List<DeviceObserver> deviceObservers = null;
 	private DeviceFinder deviceFinder = null;
 	private List<Device> devices = null;
 	private Device selectedDevice = null;
 
-	public DeviceFinderManager(ServiceProviderManager serviceProviderManager) {
-		this.deviceFinderObservers = new ArrayList<DeviceFinderObserver>();
+	public DeviceManager(ServiceProviderManager serviceProviderManager) {
+		this.deviceObservers = new ArrayList<DeviceObserver>();
 		this.deviceFinder = serviceProviderManager.getDeviceFinder();
 	}
 
-	public void addObserver(DeviceFinderObserver deviceFinderObserver) {
-		deviceFinderObservers.add(deviceFinderObserver);
+	public void addObserver(DeviceObserver deviceObserver) {
+		deviceObservers.add(deviceObserver);
 	}
 
-	public void removeObserver(DeviceFinderObserver deviceFinderObserver) {
-		deviceFinderObservers.remove(deviceFinderObserver);
+	public void removeObserver(DeviceObserver deviceObserver) {
+		deviceObservers.remove(deviceObserver);
 	}
 
 	public void setSelectedDevice(Device selectedDevice) {
 		this.selectedDevice = selectedDevice;
+
+		if (selectedDevice != null) {
+			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.setEventListener(new EventListener());
+				tvController.setResponseListener(new ResponseListener());
+
+				tvController.connect();
+			}
+		}
 
 		notifySelectedDeviceHasChanged();
 	}
@@ -67,20 +83,24 @@ public class DeviceFinderManager {
 	}
 
 	private void notifySelectedDeviceHasChanged() {
-		for (DeviceFinderObserver deviceFinderObserver : deviceFinderObservers) {
-			deviceFinderObserver.changedSelectedDevice(selectedDevice);
+		for (DeviceObserver deviceObserver : deviceObservers) {
+			deviceObserver.changedSelectedDevice(selectedDevice);
 		}
 	}
 
 	private void notifyDeviceWasAdded(Device device) {
-		for (DeviceFinderObserver deviceFinderObserver : deviceFinderObservers) {
-			deviceFinderObserver.addedDevice(device);
+		for (DeviceObserver deviceObserver : deviceObservers) {
+			deviceObserver.addedDevice(device);
 		}
 	}
 
 	private void notifyDeviceWasRemoved(Device device) {
-		for (DeviceFinderObserver deviceFinderObserver : deviceFinderObservers) {
-			deviceFinderObserver.removedDevice(device);
+		for (DeviceObserver deviceObserver : deviceObservers) {
+			deviceObserver.removedDevice(device);
 		}
+	}
+
+	public void execute(DeviceCommand deviceCommand) {
+		deviceCommand.execute(selectedDevice);
 	}
 }

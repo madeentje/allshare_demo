@@ -23,23 +23,20 @@ import com.sec.android.allshare.control.TVController.RemoteKey;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.adapters.DeviceAdapter;
-import dimitri.suls.allshare.adapters.SongAdapter;
-import dimitri.suls.allshare.control.tv.TVCommand;
 import dimitri.suls.allshare.control.tv.TouchListener;
-import dimitri.suls.allshare.managers.DeviceFinderManager;
-import dimitri.suls.allshare.managers.DeviceFinderObserver;
-import dimitri.suls.allshare.managers.DeviceInteractionManager;
-import dimitri.suls.allshare.managers.ServiceProviderManager;
-import dimitri.suls.allshare.managers.ServiceProviderObserver;
+import dimitri.suls.allshare.device.DeviceCommand;
+import dimitri.suls.allshare.device.DeviceManager;
+import dimitri.suls.allshare.device.DeviceObserver;
 import dimitri.suls.allshare.media.MediaFinder;
 import dimitri.suls.allshare.media.Song;
+import dimitri.suls.allshare.serviceprovider.ServiceProviderManager;
+import dimitri.suls.allshare.serviceprovider.ServiceProviderObserver;
 
-public class Main extends Activity implements DeviceFinderObserver, ServiceProviderObserver {
+public class Main extends Activity implements DeviceObserver, ServiceProviderObserver {
 
 	private ServiceProviderManager serviceProviderManager = null;
-	private DeviceFinderManager deviceFinderManager = null;
+	private DeviceManager deviceManager = null;
 	private MediaFinder mediaFinder = null;
-	private DeviceInteractionManager deviceInteractionManager = null;
 	private DeviceType selectedDeviceType = null;
 	private TabHost tabHostMain = null;
 	private View tabRemote = null;
@@ -146,7 +143,7 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	private void initializeTabTouch() {
 		View tabTouch = findViewById(R.id.tabTouch);
 
-		tabTouch.setOnTouchListener(new TouchListener(deviceInteractionManager));
+		tabTouch.setOnTouchListener(new TouchListener(deviceManager));
 	}
 
 	private void initializeListViewDevices() {
@@ -157,7 +154,7 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 				Device selectedDevice = (Device) adapterView.getItemAtPosition(position);
 
-				deviceFinderManager.setSelectedDevice(selectedDevice);
+				deviceManager.setSelectedDevice(selectedDevice);
 			}
 		});
 	}
@@ -179,36 +176,34 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 				// TODO: Finish this.
 				Song selectedSong = (Song) adapterView.getItemAtPosition(position);
 
-				mediaFinder.play(selectedSong);
+				// mediaFinder.play(selectedSong);
 			}
 		});
 	}
 
 	private void refreshDeviceList(DeviceType deviceType) {
-		List<Device> devices = deviceFinderManager.getDevices(deviceType);
+		List<Device> devices = deviceManager.getDevices(deviceType);
 		DeviceAdapter deviceAdapter = new DeviceAdapter(this, devices);
 
 		listViewDevices.setAdapter(deviceAdapter);
-		deviceFinderManager.setSelectedDevice(null);
+		deviceManager.setSelectedDevice(null);
 	}
 
 	private void refreshSongList() {
-		List<Song> songs = mediaFinder.getSongs();
-		SongAdapter songAdapter = new SongAdapter(this, songs);
+		// List<Song> songs = mediaFinder.getSongs();
+		// SongAdapter songAdapter = new SongAdapter(this, songs);
 
-		listViewSongs.setAdapter(songAdapter);
-		mediaFinder.setSelectedSong(null);
+		// listViewSongs.setAdapter(songAdapter);
+		// mediaFinder.setSelectedSong(null);
 	}
 
 	@Override
 	public void createdServiceProvider() {
-		deviceFinderManager = new DeviceFinderManager(serviceProviderManager);
-		deviceFinderManager.addObserver(this);
+		deviceManager = new DeviceManager(serviceProviderManager);
+		deviceManager.addObserver(this);
 
 		mediaFinder = new MediaFinder(this, serviceProviderManager);
-		mediaFinder.addObserver(this);
-
-		deviceInteractionManager = new DeviceInteractionManager(deviceFinderManager);
+		// mediaFinder.addObserver(this);
 
 		initializeTabTouch();
 
@@ -262,9 +257,11 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	private void sendRemoteKey(final RemoteKey remoteKey) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.sendRemoteKey(remoteKey);
 			}
 		});
@@ -351,9 +348,11 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	public void sendTouchClickEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.sendTouchClick();
 			}
 		});
@@ -362,9 +361,10 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	// TODO: Add more buttons for numeric keys/dash, play-keys, color-keys, ..
 
 	public void openWebPageEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String URL = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage(URL);
@@ -373,9 +373,10 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	public void searchInternetEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String searchTerm = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage("http://www.google.com/search?q=" + searchTerm);
@@ -384,9 +385,10 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	public void sendKeyboardStringEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String text = editTextBrowseTerm.getText().toString();
 
 				tvController.sendKeyboardString(text);
@@ -396,18 +398,22 @@ public class Main extends Activity implements DeviceFinderObserver, ServiceProvi
 	}
 
 	public void closeWebPageEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.closeWebPage();
 			}
 		});
 	}
 
 	public void goHomePageEvent(View view) {
-		deviceInteractionManager.execute(new TVCommand() {
+		deviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.goHomePage();
 			}
 		});

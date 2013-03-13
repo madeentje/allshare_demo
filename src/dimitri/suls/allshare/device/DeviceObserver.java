@@ -1,8 +1,8 @@
-package dimitri.suls.allshare.managers;
+package dimitri.suls.allshare.device;
 
 import com.sec.android.allshare.Device;
 
-public interface DeviceFinderObserver {
+public interface DeviceObserver {
 	void changedSelectedDevice(Device selectedDevice);
 
 	void addedDevice(Device device);
