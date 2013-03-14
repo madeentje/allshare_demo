@@ -14,28 +14,28 @@ import dimitri.suls.allshare.control.tv.TVEventListener;
 import dimitri.suls.allshare.control.tv.TVResponseListener;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 
-public class DeviceManager<T extends Device> {
-	private List<DeviceObserver<T>> deviceObservers = null;
+public class DeviceManager {
+	private List<DeviceObserver> deviceObservers = null;
 	private DeviceType deviceType = null;
 	private DeviceFinder deviceFinder = null;
-	private List<T> devices = null;
-	private T selectedDevice = null;
+	private List<Device> devices = null;
+	private Device selectedDevice = null;
 
 	public DeviceManager(DeviceType deviceType, ServiceProviderManager serviceProviderManager) {
-		this.deviceObservers = new ArrayList<DeviceObserver<T>>();
+		this.deviceObservers = new ArrayList<DeviceObserver>();
 		this.deviceType = deviceType;
 		this.deviceFinder = serviceProviderManager.getDeviceFinder();
 	}
 
-	public void addObserver(DeviceObserver<T> deviceObserver) {
+	public void addObserver(DeviceObserver deviceObserver) {
 		deviceObservers.add(deviceObserver);
 	}
 
-	public void removeObserver(DeviceObserver<T> deviceObserver) {
+	public void removeObserver(DeviceObserver deviceObserver) {
 		deviceObservers.remove(deviceObserver);
 	}
 
-	public void setSelectedDevice(T selectedDevice) {
+	public void setSelectedDevice(Device selectedDevice) {
 		this.selectedDevice = selectedDevice;
 
 		if (selectedDevice != null) {
@@ -53,12 +53,11 @@ public class DeviceManager<T extends Device> {
 		notifySelectedDeviceHasChanged();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<T> getDevices() {
+	public List<Device> getDevices() {
 		deviceFinder.setDeviceFinderEventListener(deviceType, new IDeviceFinderEventListener() {
 			@Override
 			public void onDeviceAdded(DeviceType deviceType, Device device, ERROR error) {
-				devices.add((T) device);
+				devices.add(device);
 
 				// TODO: Bug when device is added twice after sleeping, or
 				// turning Wi-FI on.. (not sure why)
@@ -66,14 +65,14 @@ public class DeviceManager<T extends Device> {
 				// the app is already started
 				// TODO: Add a "retry"-button so the user can activate the Wi-FI
 				// without having to restart the app.
-				notifyDeviceWasAdded((T) device);
+				notifyDeviceWasAdded(device);
 			}
 
 			@Override
 			public void onDeviceRemoved(DeviceType deviceType, Device device, ERROR error) {
 				devices.remove(device);
 
-				notifyDeviceWasRemoved((T) device);
+				notifyDeviceWasRemoved(device);
 
 				if (device == selectedDevice) {
 					setSelectedDevice(null);
@@ -81,30 +80,30 @@ public class DeviceManager<T extends Device> {
 			}
 		});
 
-		devices = (List<T>) deviceFinder.getDevices(deviceType);
+		devices = (List<Device>) deviceFinder.getDevices(deviceType);
 
 		return devices;
 	}
 
 	private void notifySelectedDeviceHasChanged() {
-		for (DeviceObserver<T> deviceObserver : deviceObservers) {
+		for (DeviceObserver deviceObserver : deviceObservers) {
 			deviceObserver.changedSelectedDevice(selectedDevice);
 		}
 	}
 
-	private void notifyDeviceWasAdded(T device) {
-		for (DeviceObserver<T> deviceObserver : deviceObservers) {
+	private void notifyDeviceWasAdded(Device device) {
+		for (DeviceObserver deviceObserver : deviceObservers) {
 			deviceObserver.addedDevice(device);
 		}
 	}
 
-	private void notifyDeviceWasRemoved(T device) {
-		for (DeviceObserver<T> deviceObserver : deviceObservers) {
+	private void notifyDeviceWasRemoved(Device device) {
+		for (DeviceObserver deviceObserver : deviceObservers) {
 			deviceObserver.removedDevice(device);
 		}
 	}
 
-	public void execute(DeviceCommand<T> deviceCommand) {
+	public void execute(DeviceCommand deviceCommand) {
 		deviceCommand.execute(selectedDevice);
 	}
 }
