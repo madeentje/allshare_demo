@@ -12,10 +12,46 @@
         android:onClick="refreshDeviceListEvent"
         android:text="Refresh" />
 
+    <TextView
+        android:id="@+id/textViewTVControllersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TV-controllers" />
+
     <ListView
-        android:id="@+id/listViewDevices"
+        android:id="@+id/listViewTVControllers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
+        android:choiceMode="singleChoice"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/textViewAVPlayersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AV-players" />
+
+    <ListView
+        android:id="@+id/listViewAVPlayers"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:choiceMode="singleChoice"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/textViewImageViewersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ImageViewers" />
+
+    <ListView
+        android:id="@+id/listViewImageViewers"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:choiceMode="singleChoice"
         android:focusable="true"
         android:focusableInTouchMode="true" >
