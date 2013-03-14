@@ -14,31 +14,32 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Device.DeviceType;
 import com.sec.android.allshare.Item;
 import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
 import com.sec.android.allshare.media.ContentInfo;
-import com.sec.android.allshare.media.ImageViewer;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.control.tv.TVTouchListener;
+import dimitri.suls.allshare.gui.helpers.DeviceListItemClickListener;
+import dimitri.suls.allshare.gui.helpers.FrontendDeviceObserver;
 import dimitri.suls.allshare.gui.helpers.TabManager;
 import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
 import dimitri.suls.allshare.gui.listadapters.MediaItemAdapter;
 import dimitri.suls.allshare.managers.device.DeviceCommand;
 import dimitri.suls.allshare.managers.device.DeviceManager;
-import dimitri.suls.allshare.managers.device.DeviceObserver;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
 import dimitri.suls.allshare.media.MediaFinder;
 
 public class Main extends Activity {
 	private ServiceProviderManager serviceProviderManager = null;
-	private DeviceManager<TVController> tvControllerDeviceManager = null;
-	private DeviceManager<AVPlayer> avPlayerDeviceManager = null;
-	private DeviceManager<ImageViewer> imageViewerDeviceManager = null;
+	private DeviceManager tvControllerDeviceManager = null;
+	private DeviceManager avPlayerDeviceManager = null;
+	private DeviceManager imageViewerDeviceManager = null;
 	private MediaFinder mediaFinder = null;
 	private TabManager tabManager = null;
 	private ListView listViewTVControllers = null;
@@ -61,110 +62,24 @@ public class Main extends Activity {
 		try {
 			serviceProviderManager = new ServiceProviderManager(this);
 			serviceProviderManager.addObserver(new ServiceProviderObserver() {
-				@SuppressWarnings("unchecked")
 				@Override
 				public void createdServiceProvider() {
-					tvControllerDeviceManager = new DeviceManager<TVController>(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
-					tvControllerDeviceManager.addObserver(new DeviceObserver<TVController>() {
-						@Override
-						public void changedSelectedDevice(TVController selectedDevice) {
-							if (selectedDevice == null) {
-								textViewSelectedDevice.setText("No TV-controller selected.");
+					// TODO: Add textView for other selected device-types
+					// besides TV-controller.
+					tvControllerDeviceManager = new DeviceManager(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
+					tvControllerDeviceManager.addObserver(new FrontendDeviceObserver(tabManager, listViewTVControllers, textViewSelectedDevice,
+							"TV-controller"));
 
-								tabManager.resetCurrentTab();
+					avPlayerDeviceManager = new DeviceManager(DeviceType.DEVICE_AVPLAYER, serviceProviderManager);
+					avPlayerDeviceManager.addObserver(new FrontendDeviceObserver(tabManager, listViewAVPlayers, textViewSelectedDevice, "AV-player"));
 
-								tabManager.setEnabledTabRemote(false);
-							} else {
-								textViewSelectedDevice.setText("Selected TV-controller: " + selectedDevice.getName());
-
-								tabManager.setEnabledTabRemote(true);
-							}
-						}
-
-						@Override
-						public void addedDevice(TVController device) {
-							DeviceAdapter<TVController> arrayAdapter = (DeviceAdapter<TVController>) listViewTVControllers.getAdapter();
-
-							arrayAdapter.add(device);
-						}
-
-						@Override
-						public void removedDevice(TVController device) {
-							DeviceAdapter<TVController> arrayAdapter = (DeviceAdapter<TVController>) listViewTVControllers.getAdapter();
-
-							arrayAdapter.remove(device);
-						}
-					});
-
-					avPlayerDeviceManager = new DeviceManager<AVPlayer>(DeviceType.DEVICE_AVPLAYER, serviceProviderManager);
-					avPlayerDeviceManager.addObserver(new DeviceObserver<AVPlayer>() {
-						@Override
-						public void changedSelectedDevice(AVPlayer selectedDevice) {
-							if (selectedDevice == null) {
-								// TODO: Add textView for AV-players
-								textViewSelectedDevice.setText("No AV-player selected.");
-
-								tabManager.resetCurrentTab();
-
-								tabManager.setEnabledTabMedia(false);
-							} else {
-								textViewSelectedDevice.setText("Selected AV-player: " + selectedDevice.getName());
-
-								tabManager.setEnabledTabMedia(true);
-							}
-						}
-
-						@Override
-						public void addedDevice(AVPlayer device) {
-							DeviceAdapter<AVPlayer> arrayAdapter = (DeviceAdapter<AVPlayer>) listViewAVPlayers.getAdapter();
-
-							arrayAdapter.add(device);
-						}
-
-						@Override
-						public void removedDevice(AVPlayer device) {
-							DeviceAdapter<AVPlayer> arrayAdapter = (DeviceAdapter<AVPlayer>) listViewAVPlayers.getAdapter();
-
-							arrayAdapter.remove(device);
-						}
-					});
-
-					imageViewerDeviceManager = new DeviceManager<ImageViewer>(DeviceType.DEVICE_IMAGEVIEWER, serviceProviderManager);
-					imageViewerDeviceManager.addObserver(new DeviceObserver<ImageViewer>() {
-						@Override
-						public void changedSelectedDevice(ImageViewer selectedDevice) {
-							if (selectedDevice == null) {
-								// TODO: Add textView for image-viewers
-								textViewSelectedDevice.setText("No image-viewer selected.");
-
-								tabManager.resetCurrentTab();
-
-								// TODO: Finish up image-viewer functionality
-							} else {
-								textViewSelectedDevice.setText("Selected image-viewer: " + selectedDevice.getName());
-
-								// TODO: Finish up image-viewer functionality
-							}
-						}
-
-						@Override
-						public void addedDevice(ImageViewer device) {
-							DeviceAdapter<ImageViewer> arrayAdapter = (DeviceAdapter<ImageViewer>) listViewImageViewers.getAdapter();
-
-							arrayAdapter.add(device);
-						}
-
-						@Override
-						public void removedDevice(ImageViewer device) {
-							DeviceAdapter<ImageViewer> arrayAdapter = (DeviceAdapter<ImageViewer>) listViewImageViewers.getAdapter();
-
-							arrayAdapter.remove(device);
-						}
-					});
+					imageViewerDeviceManager = new DeviceManager(DeviceType.DEVICE_IMAGEVIEWER, serviceProviderManager);
+					imageViewerDeviceManager.addObserver(new FrontendDeviceObserver(tabManager, listViewImageViewers, textViewSelectedDevice,
+							"image-viewer"));
 
 					initializeTVTouchListener();
 
-					refreshDeviceList();
+					refreshAllDeviceLists();
 				}
 			});
 		} catch (Exception exception) {
@@ -195,48 +110,18 @@ public class Main extends Activity {
 		initializeEachDeviceListViews();
 		initializeTextViewSelectedDevice();
 		initializeEditTextBrowseTerm();
-		initializeTVTouchListener();
 		initializeListViewSongs();
-	}
-
-	// TODO: Add slider to adjust speed of motion-control.
-
-	private void initializeTVTouchListener() {
-		View tabTouch = findViewById(R.id.tabTouch);
-
-		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
 	}
 
 	private void initializeEachDeviceListViews() {
 		listViewTVControllers = (ListView) findViewById(R.id.listViewTVControllers);
-		listViewTVControllers.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				TVController selectedDevice = (TVController) adapterView.getItemAtPosition(position);
-
-				tvControllerDeviceManager.setSelectedDevice(selectedDevice);
-			}
-		});
+		listViewTVControllers.setOnItemClickListener(new DeviceListItemClickListener(tvControllerDeviceManager));
 
 		listViewAVPlayers = (ListView) findViewById(R.id.listViewAVPlayers);
-		listViewAVPlayers.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				AVPlayer selectedDevice = (AVPlayer) adapterView.getItemAtPosition(position);
-
-				avPlayerDeviceManager.setSelectedDevice(selectedDevice);
-			}
-		});
+		listViewAVPlayers.setOnItemClickListener(new DeviceListItemClickListener(avPlayerDeviceManager));
 
 		listViewImageViewers = (ListView) findViewById(R.id.listViewImageViewers);
-		listViewImageViewers.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				ImageViewer selectedDevice = (ImageViewer) adapterView.getItemAtPosition(position);
-
-				imageViewerDeviceManager.setSelectedDevice(selectedDevice);
-			}
-		});
+		listViewImageViewers.setOnItemClickListener(new DeviceListItemClickListener(imageViewerDeviceManager));
 	}
 
 	private void initializeTextViewSelectedDevice() {
@@ -256,10 +141,12 @@ public class Main extends Activity {
 				final Item selectedSong = (Item) adapterView.getItemAtPosition(position);
 				final ContentInfo contentInfo = new ContentInfo.Builder().build();
 
-				avPlayerDeviceManager.execute(new DeviceCommand<AVPlayer>() {
+				avPlayerDeviceManager.execute(new DeviceCommand() {
 					@Override
-					public void execute(AVPlayer selectedDevice) {
-						selectedDevice.play(selectedSong, contentInfo);
+					public void execute(Device selectedDevice) {
+						AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+						avPlayer.play(selectedSong, contentInfo);
 					}
 				});
 			}
@@ -268,22 +155,25 @@ public class Main extends Activity {
 		refreshSongList();
 	}
 
-	private void refreshDeviceList() {
-		List<TVController> tvControllers = tvControllerDeviceManager.getDevices();
-		List<AVPlayer> avPlayers = avPlayerDeviceManager.getDevices();
-		List<ImageViewer> imageViewers = imageViewerDeviceManager.getDevices();
+	// TODO: Add slider to adjust speed of motion-control.
+	private void initializeTVTouchListener() {
+		View tabTouch = findViewById(R.id.tabTouch);
 
-		DeviceAdapter<TVController> tvControllerAdapter = new DeviceAdapter<TVController>(this, tvControllers);
-		DeviceAdapter<AVPlayer> avPlayerAdapter = new DeviceAdapter<AVPlayer>(this, avPlayers);
-		DeviceAdapter<ImageViewer> imageViewerAdapter = new DeviceAdapter<ImageViewer>(this, imageViewers);
+		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
+	}
 
-		listViewTVControllers.setAdapter(tvControllerAdapter);
-		listViewAVPlayers.setAdapter(avPlayerAdapter);
-		listViewImageViewers.setAdapter(imageViewerAdapter);
+	private void refreshAllDeviceLists() {
+		refreshDeviceList(tvControllerDeviceManager, listViewTVControllers);
+		refreshDeviceList(avPlayerDeviceManager, listViewAVPlayers);
+		refreshDeviceList(imageViewerDeviceManager, listViewImageViewers);
+	}
 
-		tvControllerDeviceManager.setSelectedDevice(null);
-		avPlayerDeviceManager.setSelectedDevice(null);
-		imageViewerDeviceManager.setSelectedDevice(null);
+	private void refreshDeviceList(DeviceManager deviceManager, ListView listView) {
+		List<Device> devices = deviceManager.getDevices();
+		DeviceAdapter deviceAdapter = new DeviceAdapter(this, devices);
+
+		listView.setAdapter(deviceAdapter);
+		deviceManager.setSelectedDevice(null);
 	}
 
 	private void refreshSongList() {
@@ -298,13 +188,15 @@ public class Main extends Activity {
 	// TODO: Add button to disconnect from the selected device
 
 	public void refreshDeviceListEvent(View view) {
-		refreshDeviceList();
+		refreshAllDeviceLists();
 	}
 
 	private void sendRemoteKey(final RemoteKey remoteKey) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.sendRemoteKey(remoteKey);
 			}
 		});
@@ -391,9 +283,11 @@ public class Main extends Activity {
 	}
 
 	public void sendTouchClickEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.sendTouchClick();
 			}
 		});
@@ -402,9 +296,10 @@ public class Main extends Activity {
 	// TODO: Add more buttons for numeric keys/dash, play-keys, color-keys, ..
 
 	public void openWebPageEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String URL = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage(URL);
@@ -413,9 +308,10 @@ public class Main extends Activity {
 	}
 
 	public void searchInternetEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String searchTerm = editTextBrowseTerm.getText().toString();
 
 				tvController.openWebPage("http://www.google.com/search?q=" + searchTerm);
@@ -424,9 +320,10 @@ public class Main extends Activity {
 	}
 
 	public void sendKeyboardStringEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
 				String text = editTextBrowseTerm.getText().toString();
 
 				tvController.sendKeyboardString(text);
@@ -436,31 +333,25 @@ public class Main extends Activity {
 	}
 
 	public void closeWebPageEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.closeWebPage();
 			}
 		});
 	}
 
 	public void goHomePageEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand<TVController>() {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
-			public void execute(TVController tvController) {
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
 				tvController.goHomePage();
 			}
 		});
-	}
-
-	public void playSongEvent(View view) {
-		// avPlayer.pause();
-		// avPlayer.resume();
-		// avPlayer.stop();
-	}
-
-	public void playVideoEvent(View view) {
-		// mediaFinder.playVideo();
 	}
 
 	public void pauseEvent(View view) {
