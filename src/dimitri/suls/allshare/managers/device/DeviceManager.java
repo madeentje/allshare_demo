@@ -18,7 +18,7 @@ public class DeviceManager<T extends Device> {
 	private List<DeviceObserver<T>> deviceObservers = null;
 	private DeviceType deviceType = null;
 	private DeviceFinder deviceFinder = null;
-	private List<Device> devices = null;
+	private List<T> devices = null;
 	private T selectedDevice = null;
 
 	public DeviceManager(DeviceType deviceType, ServiceProviderManager serviceProviderManager) {
@@ -53,12 +53,12 @@ public class DeviceManager<T extends Device> {
 		notifySelectedDeviceHasChanged();
 	}
 
-	public List<Device> getDevices() {
+	@SuppressWarnings("unchecked")
+	public List<T> getDevices() {
 		deviceFinder.setDeviceFinderEventListener(deviceType, new IDeviceFinderEventListener() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onDeviceAdded(DeviceType deviceType, Device device, ERROR error) {
-				devices.add(device);
+				devices.add((T) device);
 
 				// TODO: Bug when device is added twice after sleeping, or
 				// turning Wi-FI on.. (not sure why)
@@ -69,7 +69,6 @@ public class DeviceManager<T extends Device> {
 				notifyDeviceWasAdded((T) device);
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onDeviceRemoved(DeviceType deviceType, Device device, ERROR error) {
 				devices.remove(device);
@@ -82,7 +81,7 @@ public class DeviceManager<T extends Device> {
 			}
 		});
 
-		devices = deviceFinder.getDevices(deviceType);
+		devices = (List<T>) deviceFinder.getDevices(deviceType);
 
 		return devices;
 	}

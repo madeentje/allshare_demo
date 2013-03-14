@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 
-public class DeviceAdapter extends ArrayAdapter<Device> {
-	public DeviceAdapter(Context context, List<Device> objects) {
+public class DeviceAdapter<T extends Device> extends ArrayAdapter<T> {
+	public DeviceAdapter(Context context, List<T> objects) {
 		super(context, 0, objects);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Device device = getItem(position);
+		T device = getItem(position);
 		TextView textView = (TextView) convertView;
 
 		if (textView == null) {

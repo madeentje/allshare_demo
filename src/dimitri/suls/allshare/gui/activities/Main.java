@@ -12,11 +12,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Device.DeviceType;
 import com.sec.android.allshare.Item;
 import com.sec.android.allshare.control.TVController;
@@ -27,6 +24,7 @@ import com.sec.android.allshare.media.ImageViewer;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.control.tv.TVTouchListener;
+import dimitri.suls.allshare.gui.helpers.TabManager;
 import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
 import dimitri.suls.allshare.gui.listadapters.MediaItemAdapter;
 import dimitri.suls.allshare.managers.device.DeviceCommand;
@@ -42,9 +40,7 @@ public class Main extends Activity {
 	private DeviceManager<AVPlayer> avPlayerDeviceManager = null;
 	private DeviceManager<ImageViewer> imageViewerDeviceManager = null;
 	private MediaFinder mediaFinder = null;
-	private TabHost tabHostMain = null;
-	private View tabRemote = null;
-	private View tabMedia = null;
+	private TabManager tabManager = null;
 	private ListView listViewTVControllers = null;
 	private ListView listViewAVPlayers = null;
 	private ListView listViewImageViewers = null;
@@ -58,12 +54,14 @@ public class Main extends Activity {
 		setContentView(R.layout.main);
 
 		mediaFinder = new MediaFinder(this);
+		tabManager = new TabManager(this);
 
 		initializeViews();
 
 		try {
 			serviceProviderManager = new ServiceProviderManager(this);
 			serviceProviderManager.addObserver(new ServiceProviderObserver() {
+				@SuppressWarnings("unchecked")
 				@Override
 				public void createdServiceProvider() {
 					tvControllerDeviceManager = new DeviceManager<TVController>(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
@@ -73,26 +71,26 @@ public class Main extends Activity {
 							if (selectedDevice == null) {
 								textViewSelectedDevice.setText("No TV-controller selected.");
 
-								tabHostMain.setCurrentTab(0);
+								tabManager.resetCurrentTab();
 
-								tabRemote.setEnabled(false);
+								tabManager.setEnabledTabRemote(false);
 							} else {
 								textViewSelectedDevice.setText("Selected TV-controller: " + selectedDevice.getName());
 
-								tabRemote.setEnabled(true);
+								tabManager.setEnabledTabRemote(true);
 							}
 						}
 
 						@Override
 						public void addedDevice(TVController device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewTVControllers.getAdapter();
+							DeviceAdapter<TVController> arrayAdapter = (DeviceAdapter<TVController>) listViewTVControllers.getAdapter();
 
 							arrayAdapter.add(device);
 						}
 
 						@Override
 						public void removedDevice(TVController device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewTVControllers.getAdapter();
+							DeviceAdapter<TVController> arrayAdapter = (DeviceAdapter<TVController>) listViewTVControllers.getAdapter();
 
 							arrayAdapter.remove(device);
 						}
@@ -106,26 +104,26 @@ public class Main extends Activity {
 								// TODO: Add textView for AV-players
 								textViewSelectedDevice.setText("No AV-player selected.");
 
-								tabHostMain.setCurrentTab(0);
+								tabManager.resetCurrentTab();
 
-								tabMedia.setEnabled(false);
+								tabManager.setEnabledTabMedia(false);
 							} else {
 								textViewSelectedDevice.setText("Selected AV-player: " + selectedDevice.getName());
 
-								tabMedia.setEnabled(true);
+								tabManager.setEnabledTabMedia(true);
 							}
 						}
 
 						@Override
 						public void addedDevice(AVPlayer device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewAVPlayers.getAdapter();
+							DeviceAdapter<AVPlayer> arrayAdapter = (DeviceAdapter<AVPlayer>) listViewAVPlayers.getAdapter();
 
 							arrayAdapter.add(device);
 						}
 
 						@Override
 						public void removedDevice(AVPlayer device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewAVPlayers.getAdapter();
+							DeviceAdapter<AVPlayer> arrayAdapter = (DeviceAdapter<AVPlayer>) listViewAVPlayers.getAdapter();
 
 							arrayAdapter.remove(device);
 						}
@@ -139,7 +137,7 @@ public class Main extends Activity {
 								// TODO: Add textView for image-viewers
 								textViewSelectedDevice.setText("No image-viewer selected.");
 
-								tabHostMain.setCurrentTab(0);
+								tabManager.resetCurrentTab();
 
 								// TODO: Finish up image-viewer functionality
 							} else {
@@ -151,20 +149,20 @@ public class Main extends Activity {
 
 						@Override
 						public void addedDevice(ImageViewer device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewImageViewers.getAdapter();
+							DeviceAdapter<ImageViewer> arrayAdapter = (DeviceAdapter<ImageViewer>) listViewImageViewers.getAdapter();
 
 							arrayAdapter.add(device);
 						}
 
 						@Override
 						public void removedDevice(ImageViewer device) {
-							DeviceAdapter arrayAdapter = (DeviceAdapter) listViewImageViewers.getAdapter();
+							DeviceAdapter<ImageViewer> arrayAdapter = (DeviceAdapter<ImageViewer>) listViewImageViewers.getAdapter();
 
 							arrayAdapter.remove(device);
 						}
 					});
 
-					initializeTabTouch();
+					initializeTVTouchListener();
 
 					refreshDeviceList();
 				}
@@ -194,64 +192,16 @@ public class Main extends Activity {
 	}
 
 	private void initializeViews() {
-		initializeTabTouch();
-		initializeTabHostMain();
-		initializeTabHostRemote();
 		initializeEachDeviceListViews();
 		initializeTextViewSelectedDevice();
 		initializeEditTextBrowseTerm();
+		initializeTVTouchListener();
 		initializeListViewSongs();
-	}
-
-	private void initializeTabHostMain() {
-		tabHostMain = (TabHost) findViewById(R.id.tabHostMain);
-
-		tabHostMain.setup();
-
-		TabSpec tabSpecDevices = tabHostMain.newTabSpec("devices");
-		tabSpecDevices.setContent(R.id.tabDevices);
-		tabSpecDevices.setIndicator("Devices");
-		tabHostMain.addTab(tabSpecDevices);
-
-		TabSpec tabSpecRemote = tabHostMain.newTabSpec("remote");
-		tabSpecRemote.setContent(R.id.tabRemote);
-		tabSpecRemote.setIndicator("Remote");
-		tabHostMain.addTab(tabSpecRemote);
-		tabRemote = tabHostMain.getTabWidget().getChildTabViewAt(1);
-		tabRemote.setEnabled(false);
-
-		TabSpec tabSpecMedia = tabHostMain.newTabSpec("media");
-		tabSpecMedia.setContent(R.id.tabMedia);
-		tabSpecMedia.setIndicator("Media");
-		tabHostMain.addTab(tabSpecMedia);
-		tabMedia = tabHostMain.getTabWidget().getChildTabViewAt(2);
-		tabMedia.setEnabled(false);
-	}
-
-	private void initializeTabHostRemote() {
-		TabHost tabHostRemote = (TabHost) findViewById(R.id.tabHostRemote);
-
-		tabHostRemote.setup();
-
-		TabSpec tabSpecControls = tabHostRemote.newTabSpec("controls");
-		tabSpecControls.setContent(R.id.tabControls);
-		tabSpecControls.setIndicator("Controls");
-		tabHostRemote.addTab(tabSpecControls);
-
-		TabSpec tabSpecBrowser = tabHostRemote.newTabSpec("browser");
-		tabSpecBrowser.setContent(R.id.tabBrowser);
-		tabSpecBrowser.setIndicator("Browser");
-		tabHostRemote.addTab(tabSpecBrowser);
-
-		TabSpec tabSpecTouch = tabHostRemote.newTabSpec("touch");
-		tabSpecTouch.setContent(R.id.tabTouch);
-		tabSpecTouch.setIndicator("Touch");
-		tabHostRemote.addTab(tabSpecTouch);
 	}
 
 	// TODO: Add slider to adjust speed of motion-control.
 
-	private void initializeTabTouch() {
+	private void initializeTVTouchListener() {
 		View tabTouch = findViewById(R.id.tabTouch);
 
 		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
@@ -303,7 +253,6 @@ public class Main extends Activity {
 		listViewSongs.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				// TODO: Finish this.
 				final Item selectedSong = (Item) adapterView.getItemAtPosition(position);
 				final ContentInfo contentInfo = new ContentInfo.Builder().build();
 
@@ -320,13 +269,13 @@ public class Main extends Activity {
 	}
 
 	private void refreshDeviceList() {
-		List<Device> tvControllers = tvControllerDeviceManager.getDevices();
-		List<Device> avPlayers = avPlayerDeviceManager.getDevices();
-		List<Device> imageViewers = imageViewerDeviceManager.getDevices();
+		List<TVController> tvControllers = tvControllerDeviceManager.getDevices();
+		List<AVPlayer> avPlayers = avPlayerDeviceManager.getDevices();
+		List<ImageViewer> imageViewers = imageViewerDeviceManager.getDevices();
 
-		DeviceAdapter tvControllerAdapter = new DeviceAdapter(this, tvControllers);
-		DeviceAdapter avPlayerAdapter = new DeviceAdapter(this, avPlayers);
-		DeviceAdapter imageViewerAdapter = new DeviceAdapter(this, imageViewers);
+		DeviceAdapter<TVController> tvControllerAdapter = new DeviceAdapter<TVController>(this, tvControllers);
+		DeviceAdapter<AVPlayer> avPlayerAdapter = new DeviceAdapter<AVPlayer>(this, avPlayers);
+		DeviceAdapter<ImageViewer> imageViewerAdapter = new DeviceAdapter<ImageViewer>(this, imageViewers);
 
 		listViewTVControllers.setAdapter(tvControllerAdapter);
 		listViewAVPlayers.setAdapter(avPlayerAdapter);
