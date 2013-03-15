@@ -38,11 +38,4 @@
         </LinearLayout>
     </TabHost>
 
-    <TextView
-        android:id="@+id/textViewSelectedDevice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
 </RelativeLayout>

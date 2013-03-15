@@ -1,24 +1,39 @@
 package dimitri.suls.allshare.gui.helpers;
 
+import java.util.List;
+
+import android.content.Context;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 
 import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
+import dimitri.suls.allshare.managers.device.DeviceManager;
 import dimitri.suls.allshare.managers.device.DeviceObserver;
 
-public class FrontendDeviceObserver implements DeviceObserver {
+public class DeviceFrontendManager implements DeviceObserver {
+	private Context context = null;
+	private DeviceManager deviceManager = null;
 	private TabManager tabManager = null;
 	private ListView listViewDevices = null;
 	private TextView textViewSelectedDevice = null;
 	private String deviceType = null;
 
-	public FrontendDeviceObserver(TabManager tabManager, ListView listViewDevices, TextView textViewSelectedDevice, String deviceType) {
+	public DeviceFrontendManager(Context context, DeviceManager deviceManager, TabManager tabManager, ListView listViewDevices,
+			TextView textViewSelectedDevice, String deviceType) {
+		this.context = context;
+		this.deviceManager = deviceManager;
 		this.tabManager = tabManager;
 		this.listViewDevices = listViewDevices;
 		this.textViewSelectedDevice = textViewSelectedDevice;
 		this.deviceType = deviceType;
+
+		deviceManager.addObserver(this);
+
+		listViewDevices.setOnItemClickListener(new DeviceListItemClickListener(deviceManager));
+
+		refreshDeviceList();
 	}
 
 	@Override
@@ -49,5 +64,13 @@ public class FrontendDeviceObserver implements DeviceObserver {
 		DeviceAdapter arrayAdapter = (DeviceAdapter) listViewDevices.getAdapter();
 
 		arrayAdapter.remove(device);
+	}
+
+	public void refreshDeviceList() {
+		List<Device> devices = deviceManager.getDevices();
+		DeviceAdapter deviceAdapter = new DeviceAdapter(context, devices);
+
+		listViewDevices.setAdapter(deviceAdapter);
+		deviceManager.setSelectedDevice(null);
 	}
 }

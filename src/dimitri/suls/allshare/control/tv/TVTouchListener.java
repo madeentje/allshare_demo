@@ -53,8 +53,9 @@ public class TVTouchListener implements OnTouchListener {
 		case MotionEvent.ACTION_MOVE:
 			hasConsumedEvent = true;
 
-			final int differenceBetweenCurrentAndPreviousPositionX = (currentPositionX - previousPositionX) * 2;
-			final int differenceBetweenCurrentAndPreviousPositionY = (currentPositionY - previousPositionY) * 2;
+			// TODO: Increase speed? Doesn't handle well with SmartHub-movement
+			final int differenceBetweenCurrentAndPreviousPositionX = currentPositionX - previousPositionX;
+			final int differenceBetweenCurrentAndPreviousPositionY = currentPositionY - previousPositionY;
 
 			tvControllerDeviceManager.execute(new DeviceCommand() {
 				@Override
