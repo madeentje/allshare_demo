@@ -256,17 +256,6 @@ public class Main extends Activity {
 		sendRemoteKey(RemoteKey.KEY_POWEROFF);
 	}
 
-	public void sendTouchClickEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand() {
-			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
-				tvController.sendTouchClick();
-			}
-		});
-	}
-
 	// TODO: Add more buttons for numeric keys/dash, play-keys, color-keys, ..
 
 	public void openWebPageEvent(View view) {
@@ -306,17 +295,6 @@ public class Main extends Activity {
 		});
 	}
 
-	public void closeWebPageEvent(View view) {
-		tvControllerDeviceManager.execute(new DeviceCommand() {
-			@Override
-			public void execute(Device selectedDevice) {
-				TVController tvController = (TVController) selectedDevice;
-
-				tvController.closeWebPage();
-			}
-		});
-	}
-
 	public void goHomePageEvent(View view) {
 		tvControllerDeviceManager.execute(new DeviceCommand() {
 			@Override
@@ -328,15 +306,157 @@ public class Main extends Activity {
 		});
 	}
 
-	public void pauseEvent(View view) {
-		// mediaFinder.pause();
+	public void closeWebPageEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.closeWebPage();
+			}
+		});
 	}
 
-	public void resumeEvent(View view) {
-		// mediaFinder.resume();
+	public void browserScrollUpEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.browserScrollUp();
+			}
+		});
 	}
 
-	public void stopEvent(View view) {
-		// mediaFinder.stop();
+	public void browserScrollDownEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.browserScrollDown();
+			}
+		});
+	}
+
+	public void goPreviousWebPageEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.goPreviousWebPage();
+			}
+		});
+	}
+
+	public void goNextWebPageEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.goNextWebPage();
+			}
+		});
+	}
+
+	public void browserZoomInEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.browserZoomIn();
+			}
+		});
+	}
+
+	public void browserZoomOutEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.browserZoomOut();
+			}
+		});
+	}
+
+	public void browserZoomDefaultEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.browserZoomDefault();
+			}
+		});
+	}
+
+	public void refreshWebPageEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.refreshWebPage();
+			}
+		});
+	}
+
+	public void stopWebPageLoadingEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.stopWebPageLoading();
+			}
+		});
+	}
+
+	public void sendTouchClickEvent(View view) {
+		tvControllerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				TVController tvController = (TVController) selectedDevice;
+
+				tvController.sendTouchClick();
+			}
+		});
+	}
+
+	public void pauseMediaEvent(View view) {
+		avPlayerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+				avPlayer.pause();
+			}
+		});
+	}
+
+	public void resumeMediaEvent(View view) {
+		avPlayerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+				avPlayer.resume();
+			}
+		});
+	}
+
+	public void stopMediaEvent(View view) {
+		avPlayerDeviceManager.execute(new DeviceCommand() {
+			@Override
+			public void execute(Device selectedDevice) {
+				AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+				avPlayer.stop();
+			}
+		});
 	}
 }

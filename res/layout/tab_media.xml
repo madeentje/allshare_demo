@@ -5,62 +5,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/buttonPlaySong"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:onClick="playSongEvent"
-        android:text="Play song" />
-
-    <Button
-        android:id="@+id/buttonPlayVideo"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonPlaySong"
-        android:onClick="playVideoEvent"
-        android:text="Play video" />
-
-    <Button
-        android:id="@+id/buttonPause"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:onClick="pauseEvent"
-        android:text="Pause" />
-
-    <Button
-        android:id="@+id/buttonResume"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/buttonPlayVideo"
-        android:onClick="resumeEvent"
-        android:text="Resume" />
-
-    <Button
-        android:id="@+id/buttonStop"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/buttonResume"
-        android:onClick="stopEvent"
-        android:text="Stop" />
-
     <ListView
         android:id="@+id/listViewSongs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonStop" >
+        android:layout_below="@+id/buttonStopMedia" >
     </ListView>
+
+    <Button
+        android:id="@+id/buttonPauseMedia"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="pauseMediaEvent"
+        android:text="Pause" />
+
+    <Button
+        android:id="@+id/buttonStopMedia"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/buttonResumeMedia"
+        android:onClick="stopMediaEvent"
+        android:text="Stop" />
+
+    <Button
+        android:id="@+id/buttonResumeMedia"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listViewSongs"
+        android:layout_toRightOf="@+id/buttonPauseMedia"
+        android:onClick="resumeMediaEvent"
+        android:text="Resume" />
 
 </RelativeLayout>

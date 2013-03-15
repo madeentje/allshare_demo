@@ -13,7 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:onClick="openWebPageEvent"
-        android:text="Go" />
+        android:text="Open" />
 
     <EditText
         android:id="@+id/editTextBrowseTerm"
@@ -44,17 +44,6 @@
         android:text="Home" />
 
     <Button
-        android:id="@+id/buttonCloseWebPage"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonSearchInternet"
-        android:layout_marginTop="48dp"
-        android:onClick="closeWebPageEvent"
-        android:text="Close" />
-
-    <Button
         android:id="@+id/buttonSendKeyboardString"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -62,6 +51,107 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/buttonSearchInternet"
         android:onClick="sendKeyboardStringEvent"
-        android:text="Keyboard" />
+        android:text="Send text" />
+
+    <Button
+        android:id="@+id/buttonBrowserZoomDefault"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBrowserZoomOut"
+        android:layout_alignParentRight="true"
+        android:onClick="browserZoomDefaultEvent"
+        android:text="Default" />
+
+    <Button
+        android:id="@+id/buttonBrowserZoomIn"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBrowserZoomDefault"
+        android:layout_alignParentRight="true"
+        android:onClick="browserZoomInEvent"
+        android:text="Zoom in" />
+
+    <Button
+        android:id="@+id/buttonBrowserZoomOut"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="browserZoomOutEvent"
+        android:text="Zoom out" />
+
+    <Button
+        android:id="@+id/buttonRefreshWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonBrowserScrollUp"
+        android:layout_below="@+id/buttonBrowserScrollUp"
+        android:onClick="refreshWebPageEvent"
+        android:text="Refresh" />
+
+    <Button
+        android:id="@+id/buttonGoNextWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonBrowserScrollUp"
+        android:layout_toRightOf="@+id/buttonRefreshWebPage"
+        android:onClick="goNextWebPageEvent"
+        android:text="Next" />
+
+    <Button
+        android:id="@+id/buttonBrowserScrollUp"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonBrowserScrollDown"
+        android:layout_below="@+id/buttonSendKeyboardString"
+        android:onClick="browserScrollUpEvent"
+        android:text="Up" />
+
+    <Button
+        android:id="@+id/buttonBrowserScrollDown"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonRefreshWebPage"
+        android:layout_toRightOf="@+id/buttonGoPreviousWebPage"
+        android:onClick="browserScrollDownEvent"
+        android:text="Down" />
+
+    <Button
+        android:id="@+id/buttonCloseWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonBrowserZoomDefault"
+        android:onClick="closeWebPageEvent"
+        android:text="Close" />
+
+    <Button
+        android:id="@+id/buttonGoPreviousWebPage"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBrowserScrollDown"
+        android:layout_toRightOf="@+id/buttonCloseWebPage"
+        android:onClick="goPreviousWebPageEvent"
+        android:text="Previous" />
+
+    <Button
+        android:id="@+id/buttonStopWebPageLoading"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonBrowserZoomDefault"
+        android:layout_alignBottom="@+id/buttonBrowserZoomDefault"
+        android:layout_alignParentLeft="true"
+        android:onClick="stopWebPageLoadingEvent"
+        android:text="Stop loading" />
 
 </RelativeLayout>
