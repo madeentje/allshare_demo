@@ -14,7 +14,8 @@ public class TabManager {
 		this.activity = activity;
 
 		initializeTabHostMain();
-		initializeTabHostRemote();
+		initializeTabHostTV();
+		initializeTabHostAV();
 	}
 
 	public void resetCurrentTab() {
@@ -37,37 +38,58 @@ public class TabManager {
 		tabSpecDevices.setIndicator("Devices");
 		tabHostMain.addTab(tabSpecDevices);
 
-		TabSpec tabSpecRemote = tabHostMain.newTabSpec("remote");
-		tabSpecRemote.setContent(R.id.tabRemote);
-		tabSpecRemote.setIndicator("Remote");
-		tabHostMain.addTab(tabSpecRemote);
+		TabSpec tabSpecTV = tabHostMain.newTabSpec("tv");
+		tabSpecTV.setContent(R.id.tabTV);
+		tabSpecTV.setIndicator("TV");
+		tabHostMain.addTab(tabSpecTV);
 
-		TabSpec tabSpecMedia = tabHostMain.newTabSpec("media");
-		tabSpecMedia.setContent(R.id.tabMedia);
-		tabSpecMedia.setIndicator("Media");
-		tabHostMain.addTab(tabSpecMedia);
+		TabSpec tabSpecAV = tabHostMain.newTabSpec("av");
+		tabSpecAV.setContent(R.id.tabAV);
+		tabSpecAV.setIndicator("AV");
+		tabHostMain.addTab(tabSpecAV);
 
 		return tabHostMain;
 	}
 
-	private void initializeTabHostRemote() {
-		TabHost tabHostRemote = (TabHost) activity.findViewById(R.id.tabHostRemote);
+	private void initializeTabHostTV() {
+		TabHost tabHostTV = (TabHost) activity.findViewById(R.id.tabHostTV);
 
-		tabHostRemote.setup();
+		tabHostTV.setup();
 
-		TabSpec tabSpecControls = tabHostRemote.newTabSpec("controls");
-		tabSpecControls.setContent(R.id.tabControls);
-		tabSpecControls.setIndicator("Controls");
-		tabHostRemote.addTab(tabSpecControls);
+		TabSpec tabSpecTVRemote = tabHostTV.newTabSpec("tvRemote");
+		tabSpecTVRemote.setContent(R.id.tabTVRemote);
+		tabSpecTVRemote.setIndicator("Remote");
+		tabHostTV.addTab(tabSpecTVRemote);
 
-		TabSpec tabSpecBrowser = tabHostRemote.newTabSpec("browser");
-		tabSpecBrowser.setContent(R.id.tabBrowser);
-		tabSpecBrowser.setIndicator("Browser");
-		tabHostRemote.addTab(tabSpecBrowser);
+		TabSpec tabSpecTVBrowser = tabHostTV.newTabSpec("tvBrowser");
+		tabSpecTVBrowser.setContent(R.id.tabTVBrowser);
+		tabSpecTVBrowser.setIndicator("Browser");
+		tabHostTV.addTab(tabSpecTVBrowser);
 
-		TabSpec tabSpecTouch = tabHostRemote.newTabSpec("touch");
-		tabSpecTouch.setContent(R.id.tabTouch);
-		tabSpecTouch.setIndicator("Touch");
-		tabHostRemote.addTab(tabSpecTouch);
+		TabSpec tabSpecTVTouch = tabHostTV.newTabSpec("tvTouch");
+		tabSpecTVTouch.setContent(R.id.tabTVTouch);
+		tabSpecTVTouch.setIndicator("Touch");
+		tabHostTV.addTab(tabSpecTVTouch);
+	}
+
+	private void initializeTabHostAV() {
+		TabHost tabHostAV = (TabHost) activity.findViewById(R.id.tabHostAV);
+
+		tabHostAV.setup();
+
+		TabSpec tabSpecAVSongs = tabHostAV.newTabSpec("avSongs");
+		tabSpecAVSongs.setContent(R.id.tabAVSongs);
+		tabSpecAVSongs.setIndicator("Songs");
+		tabHostAV.addTab(tabSpecAVSongs);
+
+		TabSpec tabSpecAVVideos = tabHostAV.newTabSpec("avVideos");
+		tabSpecAVVideos.setContent(R.id.tabAVVideos);
+		tabSpecAVVideos.setIndicator("Videos");
+		tabHostAV.addTab(tabSpecAVVideos);
+
+		TabSpec tabSpecAVControls = tabHostAV.newTabSpec("avControls");
+		tabSpecAVControls.setContent(R.id.tabAVControls);
+		tabSpecAVControls.setIndicator("Controls");
+		tabHostAV.addTab(tabSpecAVControls);
 	}
 }

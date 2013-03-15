@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabRemote"
+    android:id="@+id/tabTV"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <TabHost
-        android:id="@+id/tabHostRemote"
+        android:id="@+id/tabHostTV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" >
@@ -26,11 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <include layout="@layout/tab_controls" />
+                <include layout="@layout/tab_tv_remote" />
 
-                <include layout="@layout/tab_browser" />
+                <include layout="@layout/tab_tv_browser" />
 
-                <include layout="@layout/tab_touch" />
+                <include layout="@layout/tab_tv_touch" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>

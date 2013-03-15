@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabMedia"
+    android:id="@+id/tabAVControls"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <ListView
-        android:id="@+id/listViewSongs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonStopMedia" >
-    </ListView>
+    android:layout_height="match_parent" >
 
     <Button
         android:id="@+id/buttonPauseMedia"
@@ -24,6 +15,16 @@
         android:text="Pause" />
 
     <Button
+        android:id="@+id/buttonResumeMedia"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/buttonPauseMedia"
+        android:onClick="resumeMediaEvent"
+        android:text="Resume" />
+
+    <Button
         android:id="@+id/buttonStopMedia"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -32,15 +33,5 @@
         android:layout_toRightOf="@+id/buttonResumeMedia"
         android:onClick="stopMediaEvent"
         android:text="Stop" />
-
-    <Button
-        android:id="@+id/buttonResumeMedia"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/listViewSongs"
-        android:layout_toRightOf="@+id/buttonPauseMedia"
-        android:onClick="resumeMediaEvent"
-        android:text="Resume" />
 
 </RelativeLayout>

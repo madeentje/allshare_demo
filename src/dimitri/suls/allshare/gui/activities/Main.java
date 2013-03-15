@@ -44,6 +44,7 @@ public class Main extends Activity {
 	private MediaFinder mediaFinder = null;
 	private EditText editTextBrowseTerm = null;
 	private ListView listViewSongs = null;
+	private ListView listViewVideos = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,10 @@ public class Main extends Activity {
 					initializeEditTextBrowseTerm();
 
 					initializeListViewSongs();
+					initializeListViewVideos();
 
 					refreshSongList();
+					refreshVideoList();
 				}
 			});
 		} catch (Exception exception) {
@@ -118,7 +121,7 @@ public class Main extends Activity {
 
 	// TODO: Add slider to adjust speed of motion-control.
 	private void initializeTVTouchListener() {
-		View tabTouch = findViewById(R.id.tabTouch);
+		View tabTouch = findViewById(R.id.tabTVTouch);
 
 		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
 	}
@@ -148,6 +151,28 @@ public class Main extends Activity {
 		});
 	}
 
+	// TODO: Abstract away this method (code duplication, see above)
+	private void initializeListViewVideos() {
+		listViewVideos = (ListView) findViewById(R.id.listViewVideos);
+
+		listViewVideos.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+				final Item selectedVideo = (Item) adapterView.getItemAtPosition(position);
+				final ContentInfo contentInfo = new ContentInfo.Builder().build();
+
+				avPlayerDeviceManager.execute(new DeviceCommand() {
+					@Override
+					public void execute(Device selectedDevice) {
+						AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+						avPlayer.play(selectedVideo, contentInfo);
+					}
+				});
+			}
+		});
+	}
+
 	private void refreshSongList() {
 		List<Item> songs = mediaFinder.findAllSongsOnExternalStorageOfDevice();
 		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(this, songs);
@@ -155,6 +180,14 @@ public class Main extends Activity {
 		listViewSongs.setAdapter(mediaItemAdapter);
 		// TODO: Implement observers for mediaItems, just like with devices.
 		// mediaFinder.setSelectedSong(null);
+	}
+
+	// TODO: Abstract away this method (code duplication, see above)
+	private void refreshVideoList() {
+		List<Item> videos = mediaFinder.findAllVideosOnExternalStorageOfDevice();
+		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(this, videos);
+
+		listViewVideos.setAdapter(mediaItemAdapter);
 	}
 
 	// TODO: Add button to disconnect from the selected device
