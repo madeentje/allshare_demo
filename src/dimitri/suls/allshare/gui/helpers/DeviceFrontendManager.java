@@ -3,6 +3,9 @@ package dimitri.suls.allshare.gui.helpers;
 import java.util.List;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,23 +18,34 @@ import dimitri.suls.allshare.managers.device.DeviceObserver;
 public class DeviceFrontendManager implements DeviceObserver {
 	private Context context = null;
 	private DeviceManager deviceManager = null;
-	private TabManager tabManager = null;
 	private ListView listViewDevices = null;
 	private TextView textViewSelectedDevice = null;
 	private String deviceType = null;
+	private TabManager tabManager = null;
+	private int tabIndex = 0;
 
-	public DeviceFrontendManager(Context context, DeviceManager deviceManager, TabManager tabManager, ListView listViewDevices,
-			TextView textViewSelectedDevice, String deviceType) {
+	private class DeviceListItemClickListener implements OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+			Device selectedDevice = (Device) adapterView.getItemAtPosition(position);
+
+			deviceManager.setSelectedDevice(selectedDevice);
+		}
+	}
+
+	public DeviceFrontendManager(Context context, DeviceManager deviceManager, ListView listViewDevices, TextView textViewSelectedDevice,
+			String deviceType, TabManager tabManager, int tabIndex) {
 		this.context = context;
 		this.deviceManager = deviceManager;
-		this.tabManager = tabManager;
 		this.listViewDevices = listViewDevices;
 		this.textViewSelectedDevice = textViewSelectedDevice;
 		this.deviceType = deviceType;
+		this.tabManager = tabManager;
+		this.tabIndex = tabIndex;
 
 		deviceManager.addObserver(this);
 
-		listViewDevices.setOnItemClickListener(new DeviceListItemClickListener(deviceManager));
+		listViewDevices.setOnItemClickListener(new DeviceListItemClickListener());
 
 		refreshDeviceList();
 	}
@@ -43,12 +57,11 @@ public class DeviceFrontendManager implements DeviceObserver {
 
 			tabManager.resetCurrentTab();
 
-			// TODO: Find way to enable/disable correct tabs
-			tabManager.setEnabledTabRemote(false);
+			tabManager.setTabEnabledStatus(tabIndex, false);
 		} else {
 			textViewSelectedDevice.setText("Selected " + deviceType + ": " + selectedDevice.getName());
 
-			tabManager.setEnabledTabRemote(true);
+			tabManager.setTabEnabledStatus(tabIndex, true);
 		}
 	}
 

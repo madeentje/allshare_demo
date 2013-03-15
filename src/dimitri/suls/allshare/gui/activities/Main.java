@@ -107,12 +107,13 @@ public class Main extends Activity {
 		TextView textViewSelectedAVPlayer = (TextView) findViewById(R.id.textViewSelectedAVPlayer);
 		TextView textViewSelectedImageViewer = (TextView) findViewById(R.id.textViewSelectedImageViewer);
 
-		tvControllerDeviceFrontendManager = new DeviceFrontendManager(this, tvControllerDeviceManager, tabManager, listViewTVControllers,
-				textViewSelectedTVController, "TV-controller");
-		avPlayerDeviceFrontendManager = new DeviceFrontendManager(this, avPlayerDeviceManager, tabManager, listViewAVPlayers,
-				textViewSelectedAVPlayer, "AV-player");
-		imageViewerDeviceFrontendManager = new DeviceFrontendManager(this, imageViewerDeviceManager, tabManager, listViewImageViewers,
-				textViewSelectedImageViewer, "image-viewer");
+		tvControllerDeviceFrontendManager = new DeviceFrontendManager(this, tvControllerDeviceManager, listViewTVControllers,
+				textViewSelectedTVController, "TV-controller", tabManager, 1);
+		avPlayerDeviceFrontendManager = new DeviceFrontendManager(this, avPlayerDeviceManager, listViewAVPlayers, textViewSelectedAVPlayer,
+				"AV-player", tabManager, 2);
+		// TODO: Add tab for image-viewer
+		imageViewerDeviceFrontendManager = new DeviceFrontendManager(this, imageViewerDeviceManager, listViewImageViewers,
+				textViewSelectedImageViewer, "image-viewer", tabManager, 2);
 	}
 
 	// TODO: Add slider to adjust speed of motion-control.
