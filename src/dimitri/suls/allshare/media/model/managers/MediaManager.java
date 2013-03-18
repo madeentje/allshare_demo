@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.media;
+package dimitri.suls.allshare.media.model.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,14 @@ import android.provider.MediaStore;
 import com.sec.android.allshare.Item;
 import com.sec.android.allshare.Item.LocalContentBuilder;
 
-public class MediaFinder {
+public class MediaManager {
 	private Context context;
 
 	public enum MediaType {
 		AUDIO, VIDEO
 	}
 
-	public MediaFinder(Context context) {
+	public MediaManager(Context context) {
 		this.context = context;
 	}
 

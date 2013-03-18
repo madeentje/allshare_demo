@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.managers.serviceprovider;
+package dimitri.suls.allshare.serviceprovider.model.managers;
 
 import java.util.ArrayList;
 import java.util.List;

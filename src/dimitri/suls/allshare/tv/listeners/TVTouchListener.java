@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.control.tv;
+package dimitri.suls.allshare.tv.listeners;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -7,8 +7,8 @@ import android.view.View.OnTouchListener;
 import com.sec.android.allshare.Device;
 import com.sec.android.allshare.control.TVController;
 
-import dimitri.suls.allshare.managers.device.DeviceCommand;
-import dimitri.suls.allshare.managers.device.DeviceManager;
+import dimitri.suls.allshare.device.model.manager.DeviceCommand;
+import dimitri.suls.allshare.device.model.manager.DeviceManager;
 
 public class TVTouchListener implements OnTouchListener {
 	private DeviceManager tvControllerDeviceManager = null;

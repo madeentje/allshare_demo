@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.control.tv;
+package dimitri.suls.allshare.tv.listeners;
 
 import com.sec.android.allshare.ERROR;
 import com.sec.android.allshare.control.TVController;

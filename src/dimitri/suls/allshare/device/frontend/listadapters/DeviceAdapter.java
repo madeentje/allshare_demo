@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.gui.listadapters;
+package dimitri.suls.allshare.device.frontend.listadapters;
 
 import java.util.List;
 
@@ -8,23 +8,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.sec.android.allshare.Item;
+import com.sec.android.allshare.Device;
 
-public class MediaItemAdapter extends ArrayAdapter<Item> {
-	public MediaItemAdapter(Context context, List<Item> objects) {
+public class DeviceAdapter extends ArrayAdapter<Device> {
+	public DeviceAdapter(Context context, List<Device> objects) {
 		super(context, 0, objects);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Item mediaItem = getItem(position);
+		Device device = getItem(position);
 		TextView textView = (TextView) convertView;
 
 		if (textView == null) {
 			textView = new TextView(getContext());
 		}
 
-		textView.setText(mediaItem.getTitle());
+		textView.setText(device.getName());
 		textView.setTextSize(20);
 		textView.setPadding(10, 10, 10, 10);
 

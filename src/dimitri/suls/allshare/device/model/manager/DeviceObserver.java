@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.managers.device;
+package dimitri.suls.allshare.device.model.manager;
 
 import com.sec.android.allshare.Device;
 

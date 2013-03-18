@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.gui.helpers;
+package dimitri.suls.allshare.media.frontend.managers;
 
 import java.util.List;
 
@@ -13,17 +13,17 @@ import com.sec.android.allshare.Item;
 import com.sec.android.allshare.media.AVPlayer;
 import com.sec.android.allshare.media.ContentInfo;
 
-import dimitri.suls.allshare.gui.listadapters.MediaItemAdapter;
-import dimitri.suls.allshare.managers.device.DeviceCommand;
-import dimitri.suls.allshare.managers.device.DeviceManager;
-import dimitri.suls.allshare.media.MediaFinder;
-import dimitri.suls.allshare.media.MediaFinder.MediaType;
+import dimitri.suls.allshare.device.model.manager.DeviceCommand;
+import dimitri.suls.allshare.device.model.manager.DeviceManager;
+import dimitri.suls.allshare.media.frontend.listadapters.MediaItemAdapter;
+import dimitri.suls.allshare.media.model.managers.MediaManager;
+import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
 
 public class MediaFrontendManager {
 	private Context context;
 	private ListView listViewMedia;
 	private DeviceManager avPlayerDeviceManager;
-	private MediaFinder mediaFinder;
+	private MediaManager mediaManager;
 	private MediaType mediaType;
 
 	private class MediaListItemClickListener implements OnItemClickListener {
@@ -46,12 +46,12 @@ public class MediaFrontendManager {
 		}
 	}
 
-	public MediaFrontendManager(Context context, ListView listViewMedia, DeviceManager avPlayerDeviceManager, MediaFinder mediaFinder,
+	public MediaFrontendManager(Context context, ListView listViewMedia, DeviceManager avPlayerDeviceManager, MediaManager mediaManager,
 			MediaType mediaType) {
 		this.context = context;
 		this.listViewMedia = listViewMedia;
 		this.avPlayerDeviceManager = avPlayerDeviceManager;
-		this.mediaFinder = mediaFinder;
+		this.mediaManager = mediaManager;
 		this.mediaType = mediaType;
 
 		listViewMedia.setOnItemClickListener(new MediaListItemClickListener());
@@ -60,11 +60,11 @@ public class MediaFrontendManager {
 	}
 
 	public void refreshMediaList() {
-		List<Item> mediaItems = mediaFinder.findAllMediaItems(mediaType);
+		List<Item> mediaItems = mediaManager.findAllMediaItems(mediaType);
 		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(context, mediaItems);
 
 		listViewMedia.setAdapter(mediaItemAdapter);
 		// TODO: Implement observers for mediaItems, just like with devices.
-		// mediaFinder.setSelectedSong(null);
+		// mediaManager.setSelectedSong(null);
 	}
 }

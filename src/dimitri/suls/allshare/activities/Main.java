@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.gui.activities;
+package dimitri.suls.allshare.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,16 +17,16 @@ import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
 
 import dimitri.suls.allshare.R;
-import dimitri.suls.allshare.control.tv.TVTouchListener;
-import dimitri.suls.allshare.gui.helpers.DeviceFrontendManager;
-import dimitri.suls.allshare.gui.helpers.MediaFrontendManager;
-import dimitri.suls.allshare.gui.helpers.TabManager;
-import dimitri.suls.allshare.managers.device.DeviceCommand;
-import dimitri.suls.allshare.managers.device.DeviceManager;
-import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
-import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
-import dimitri.suls.allshare.media.MediaFinder;
-import dimitri.suls.allshare.media.MediaFinder.MediaType;
+import dimitri.suls.allshare.device.frontend.manager.DeviceFrontendManager;
+import dimitri.suls.allshare.device.model.manager.DeviceCommand;
+import dimitri.suls.allshare.device.model.manager.DeviceManager;
+import dimitri.suls.allshare.helpers.frontend.TabManager;
+import dimitri.suls.allshare.media.frontend.managers.MediaFrontendManager;
+import dimitri.suls.allshare.media.model.managers.MediaManager;
+import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
+import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderManager;
+import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderObserver;
+import dimitri.suls.allshare.tv.listeners.TVTouchListener;
 
 public class Main extends Activity {
 	private ServiceProviderManager serviceProviderManager = null;
@@ -39,7 +39,7 @@ public class Main extends Activity {
 	// TODO: Reference needed for MediaFrontendManagers?
 	private MediaFrontendManager songsFrontendManager = null;
 	private MediaFrontendManager videosFrontendManager = null;
-	private MediaFinder mediaFinder = null;
+	private MediaManager mediaManager = null;
 	private EditText editTextBrowseTerm = null;
 	private ListView listViewSongs = null;
 	private ListView listViewVideos = null;
@@ -49,7 +49,7 @@ public class Main extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mediaFinder = new MediaFinder(this);
+		mediaManager = new MediaManager(this);
 
 		try {
 			serviceProviderManager = new ServiceProviderManager(this);
@@ -128,8 +128,8 @@ public class Main extends Activity {
 		listViewSongs = (ListView) findViewById(R.id.listViewSongs);
 		listViewVideos = (ListView) findViewById(R.id.listViewVideos);
 
-		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaFinder, MediaType.AUDIO);
-		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaFinder, MediaType.VIDEO);
+		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaManager, MediaType.AUDIO);
+		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaManager, MediaType.VIDEO);
 	}
 
 	// TODO: Add button to disconnect from the selected device

@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.gui.helpers;
+package dimitri.suls.allshare.device.frontend.manager;
 
 import java.util.List;
 
@@ -11,9 +11,10 @@ import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 
-import dimitri.suls.allshare.gui.listadapters.DeviceAdapter;
-import dimitri.suls.allshare.managers.device.DeviceManager;
-import dimitri.suls.allshare.managers.device.DeviceObserver;
+import dimitri.suls.allshare.device.frontend.listadapters.DeviceAdapter;
+import dimitri.suls.allshare.device.model.manager.DeviceManager;
+import dimitri.suls.allshare.device.model.manager.DeviceObserver;
+import dimitri.suls.allshare.helpers.frontend.TabManager;
 
 public class DeviceFrontendManager implements DeviceObserver {
 	private Context context = null;

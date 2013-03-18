@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.gui.helpers;
+package dimitri.suls.allshare.helpers.frontend;
 
 import android.app.Activity;
 import android.view.View;
