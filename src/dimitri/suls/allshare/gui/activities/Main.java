@@ -1,37 +1,32 @@
 package dimitri.suls.allshare.gui.activities;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Device.DeviceType;
-import com.sec.android.allshare.Item;
 import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
-import com.sec.android.allshare.media.ContentInfo;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.control.tv.TVTouchListener;
 import dimitri.suls.allshare.gui.helpers.DeviceFrontendManager;
+import dimitri.suls.allshare.gui.helpers.MediaFrontendManager;
 import dimitri.suls.allshare.gui.helpers.TabManager;
-import dimitri.suls.allshare.gui.listadapters.MediaItemAdapter;
 import dimitri.suls.allshare.managers.device.DeviceCommand;
 import dimitri.suls.allshare.managers.device.DeviceManager;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderManager;
 import dimitri.suls.allshare.managers.serviceprovider.ServiceProviderObserver;
 import dimitri.suls.allshare.media.MediaFinder;
+import dimitri.suls.allshare.media.MediaFinder.MediaType;
 
 public class Main extends Activity {
 	private ServiceProviderManager serviceProviderManager = null;
@@ -41,6 +36,9 @@ public class Main extends Activity {
 	private DeviceFrontendManager tvControllerDeviceFrontendManager = null;
 	private DeviceFrontendManager avPlayerDeviceFrontendManager = null;
 	private DeviceFrontendManager imageViewerDeviceFrontendManager = null;
+	// TODO: Reference needed for MediaFrontendManagers?
+	private MediaFrontendManager songsFrontendManager = null;
+	private MediaFrontendManager videosFrontendManager = null;
 	private MediaFinder mediaFinder = null;
 	private EditText editTextBrowseTerm = null;
 	private ListView listViewSongs = null;
@@ -64,11 +62,7 @@ public class Main extends Activity {
 
 					initializeEditTextBrowseTerm();
 
-					initializeListViewSongs();
-					initializeListViewVideos();
-
-					refreshSongList();
-					refreshVideoList();
+					initializeEachMediaList();
 				}
 			});
 		} catch (Exception exception) {
@@ -130,64 +124,12 @@ public class Main extends Activity {
 		editTextBrowseTerm = (EditText) findViewById(R.id.editTextBrowseTerm);
 	}
 
-	private void initializeListViewSongs() {
+	private void initializeEachMediaList() {
 		listViewSongs = (ListView) findViewById(R.id.listViewSongs);
-
-		listViewSongs.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				final Item selectedSong = (Item) adapterView.getItemAtPosition(position);
-				final ContentInfo contentInfo = new ContentInfo.Builder().build();
-
-				avPlayerDeviceManager.execute(new DeviceCommand() {
-					@Override
-					public void execute(Device selectedDevice) {
-						AVPlayer avPlayer = (AVPlayer) selectedDevice;
-
-						avPlayer.play(selectedSong, contentInfo);
-					}
-				});
-			}
-		});
-	}
-
-	// TODO: Abstract away this method (code duplication, see above)
-	private void initializeListViewVideos() {
 		listViewVideos = (ListView) findViewById(R.id.listViewVideos);
 
-		listViewVideos.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-				final Item selectedVideo = (Item) adapterView.getItemAtPosition(position);
-				final ContentInfo contentInfo = new ContentInfo.Builder().build();
-
-				avPlayerDeviceManager.execute(new DeviceCommand() {
-					@Override
-					public void execute(Device selectedDevice) {
-						AVPlayer avPlayer = (AVPlayer) selectedDevice;
-
-						avPlayer.play(selectedVideo, contentInfo);
-					}
-				});
-			}
-		});
-	}
-
-	private void refreshSongList() {
-		List<Item> songs = mediaFinder.findAllSongsOnExternalStorageOfDevice();
-		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(this, songs);
-
-		listViewSongs.setAdapter(mediaItemAdapter);
-		// TODO: Implement observers for mediaItems, just like with devices.
-		// mediaFinder.setSelectedSong(null);
-	}
-
-	// TODO: Abstract away this method (code duplication, see above)
-	private void refreshVideoList() {
-		List<Item> videos = mediaFinder.findAllVideosOnExternalStorageOfDevice();
-		MediaItemAdapter mediaItemAdapter = new MediaItemAdapter(this, videos);
-
-		listViewVideos.setAdapter(mediaItemAdapter);
+		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaFinder, MediaType.AUDIO);
+		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaFinder, MediaType.VIDEO);
 	}
 
 	// TODO: Add button to disconnect from the selected device

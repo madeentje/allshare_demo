@@ -15,14 +15,25 @@ import com.sec.android.allshare.Item.LocalContentBuilder;
 public class MediaFinder {
 	private Context context;
 
+	public enum MediaType {
+		AUDIO, VIDEO
+	}
+
 	public MediaFinder(Context context) {
 		this.context = context;
 	}
 
-	public List<Item> findAllSongsOnExternalStorageOfDevice() {
-		Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+	public List<Item> findAllMediaItems(MediaType mediaType) {
+		Uri uri = null;
 		String[] projection = { "*" };
-		String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+		String selection = null;
+
+		if (mediaType == MediaType.AUDIO) {
+			uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+			selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+		} else if (mediaType == MediaType.VIDEO) {
+			uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+		}
 
 		CursorLoader cursorLoader = new CursorLoader(context, uri, projection, selection, null, null);
 		Cursor cursor = cursorLoader.loadInBackground();
@@ -30,17 +41,7 @@ public class MediaFinder {
 		return getMediaItemsFromCursorToList(cursor);
 	}
 
-	public List<Item> findAllVideosOnExternalStorageOfDevice() {
-		Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-		String[] projection = { "*" };
-
-		CursorLoader cursorLoader = new CursorLoader(context, uri, projection, null, null, null);
-		Cursor cursor = cursorLoader.loadInBackground();
-
-		return getMediaItemsFromCursorToList(cursor);
-	}
-
-	public List<Item> getMediaItemsFromCursorToList(Cursor cursor) {
+	private List<Item> getMediaItemsFromCursorToList(Cursor cursor) {
 		List<Item> songs = new ArrayList<Item>();
 
 		String filePath = null;
