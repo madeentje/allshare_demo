@@ -1,9 +1,6 @@
 package dimitri.suls.allshare.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -36,50 +33,20 @@ public class Main extends Activity {
 	private DeviceFrontendManager tvControllerDeviceFrontendManager = null;
 	private DeviceFrontendManager avPlayerDeviceFrontendManager = null;
 	private DeviceFrontendManager imageViewerDeviceFrontendManager = null;
+	private TabManager tabManager = null;
 	// TODO: Reference needed for MediaFrontendManagers?
 	private MediaFrontendManager songsFrontendManager = null;
 	private MediaFrontendManager videosFrontendManager = null;
-	private MediaManager mediaManager = null;
 	private EditText editTextBrowseTerm = null;
-	private ListView listViewSongs = null;
-	private ListView listViewVideos = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		mediaManager = new MediaManager(this);
+		tabManager = new TabManager(this);
 
-		try {
-			serviceProviderManager = new ServiceProviderManager(this);
-			serviceProviderManager.addObserver(new ServiceProviderObserver() {
-				@Override
-				public void createdServiceProvider() {
-					initializeEachDeviceManager();
-
-					initializeTVTouchListener();
-
-					initializeEditTextBrowseTerm();
-
-					initializeEachMediaList();
-				}
-			});
-		} catch (Exception exception) {
-			final Activity activityMain = this;
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-
-			alertDialog.setCancelable(false);
-			alertDialog.setMessage("Error occured: \r\n" + exception.getMessage());
-			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "OK", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					activityMain.finish();
-				}
-			});
-
-			alertDialog.show();
-		}
+		InitializeManager initializeManager = new InitializeManager(this);
 	}
 
 	@Override
@@ -89,9 +56,20 @@ public class Main extends Activity {
 		super.onDestroy();
 	}
 
-	private void initializeEachDeviceManager() {
-		TabManager tabManager = new TabManager(this);
+	public void initialize() throws Exception {
+		serviceProviderManager = new ServiceProviderManager(this);
+		serviceProviderManager.addObserver(new ServiceProviderObserver() {
+			@Override
+			public void createdServiceProvider() {
+				initializeEachDeviceManager();
+				initializeEachMediaList();
+				initializeEditTextBrowseTerm();
+				initializeTVTouchListener();
+			}
+		});
+	}
 
+	private void initializeEachDeviceManager() {
 		tvControllerDeviceManager = new DeviceManager(DeviceType.DEVICE_TV_CONTROLLER, serviceProviderManager);
 		avPlayerDeviceManager = new DeviceManager(DeviceType.DEVICE_AVPLAYER, serviceProviderManager);
 		imageViewerDeviceManager = new DeviceManager(DeviceType.DEVICE_IMAGEVIEWER, serviceProviderManager);
@@ -113,23 +91,25 @@ public class Main extends Activity {
 				textViewSelectedImageViewer, "image-viewer", tabManager, 2);
 	}
 
-	// TODO: Add slider to adjust speed of motion-control.
-	private void initializeTVTouchListener() {
-		View tabTouch = findViewById(R.id.tabTVTouch);
+	private void initializeEachMediaList() {
+		MediaManager mediaManager = new MediaManager(this);
 
-		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
+		ListView listViewSongs = (ListView) findViewById(R.id.listViewSongs);
+		ListView listViewVideos = (ListView) findViewById(R.id.listViewVideos);
+
+		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaManager, MediaType.AUDIO);
+		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaManager, MediaType.VIDEO);
 	}
 
 	private void initializeEditTextBrowseTerm() {
 		editTextBrowseTerm = (EditText) findViewById(R.id.editTextBrowseTerm);
 	}
 
-	private void initializeEachMediaList() {
-		listViewSongs = (ListView) findViewById(R.id.listViewSongs);
-		listViewVideos = (ListView) findViewById(R.id.listViewVideos);
+	// TODO: Add slider to adjust speed of motion-control.
+	private void initializeTVTouchListener() {
+		View tabTouch = findViewById(R.id.tabTVTouch);
 
-		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaManager, MediaType.AUDIO);
-		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaManager, MediaType.VIDEO);
+		tabTouch.setOnTouchListener(new TVTouchListener(tvControllerDeviceManager));
 	}
 
 	// TODO: Add button to disconnect from the selected device

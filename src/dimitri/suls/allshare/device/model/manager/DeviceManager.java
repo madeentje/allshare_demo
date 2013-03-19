@@ -61,10 +61,6 @@ public class DeviceManager {
 
 				// TODO: Bug when device is added twice after sleeping, or
 				// turning Wi-FI on.. (not sure why)
-				// TODO: Add Listener to check when user deactivated Wi-Fi while
-				// the app is already started
-				// TODO: Add a "retry"-button so the user can activate the Wi-FI
-				// without having to restart the app.
 				notifyDeviceWasAdded(device);
 			}
 

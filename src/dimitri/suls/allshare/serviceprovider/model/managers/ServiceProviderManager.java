@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.sec.android.allshare.DeviceFinder;
 import com.sec.android.allshare.ERROR;
@@ -35,26 +33,9 @@ public class ServiceProviderManager {
 			}
 		});
 
-		if (!isWifiConnected(context)) {
-			throw new Exception("Wi-Fi is not connected!");
-		} else if (error != ERROR.SUCCESS) {
+		if (error != ERROR.SUCCESS) {
 			throw new Exception(error.toString() + "!");
 		}
-	}
-
-	private boolean isWifiConnected(Context context) {
-		boolean isWifiConnected = false;
-
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
-
-		for (NetworkInfo networkInfo : allNetworkInfo) {
-			if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected()) {
-				isWifiConnected = true;
-			}
-		}
-
-		return isWifiConnected;
 	}
 
 	public void addObserver(ServiceProviderObserver serviceProviderObserver) {

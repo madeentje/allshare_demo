@@ -23,6 +23,9 @@ public class MediaManager {
 		this.context = context;
 	}
 
+	// TODO: Add volume-handler so user doesn't have to go to TV-tab to change
+	// the volume.
+
 	public List<Item> findAllMediaItems(MediaType mediaType) {
 		Uri uri = null;
 		String[] projection = { "*" };
