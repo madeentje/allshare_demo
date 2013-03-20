@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.avplayer.frontend.listadapters;
+package dimitri.suls.allshare.media.frontend.listadapters;
 
 import java.util.List;
 

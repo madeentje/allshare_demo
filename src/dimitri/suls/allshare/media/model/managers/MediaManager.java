@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.avplayer.model.managers;
+package dimitri.suls.allshare.media.model.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class MediaManager {
 	private Context context;
 
 	public enum MediaType {
-		AUDIO, VIDEO
+		AUDIO, VIDEO, IMAGES
 	}
 
 	public MediaManager(Context context) {
@@ -33,6 +33,8 @@ public class MediaManager {
 			selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 		} else if (mediaType == MediaType.VIDEO) {
 			uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+		} else if (mediaType == MediaType.IMAGES) {
+			uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 		}
 
 		CursorLoader cursorLoader = new CursorLoader(context, uri, projection, selection, null, null);

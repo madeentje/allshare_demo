@@ -21,12 +21,12 @@ import com.sec.android.allshare.media.AVPlayer;
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.activities.helpers.InitializeManager;
 import dimitri.suls.allshare.activities.helpers.TabManager;
-import dimitri.suls.allshare.avplayer.frontend.managers.MediaFrontendManager;
-import dimitri.suls.allshare.avplayer.model.managers.MediaManager;
-import dimitri.suls.allshare.avplayer.model.managers.MediaManager.MediaType;
 import dimitri.suls.allshare.device.frontend.manager.DeviceFrontendManager;
 import dimitri.suls.allshare.device.model.manager.DeviceCommand;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
+import dimitri.suls.allshare.media.frontend.managers.MediaFrontendManager;
+import dimitri.suls.allshare.media.model.managers.MediaManager;
+import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderManager;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderObserver;
 import dimitri.suls.allshare.tv.listeners.TVTouchListener;
@@ -43,6 +43,7 @@ public class Main extends Activity {
 	// TODO: Reference needed for MediaFrontendManagers?
 	private MediaFrontendManager songsFrontendManager = null;
 	private MediaFrontendManager videosFrontendManager = null;
+	private MediaFrontendManager imagesFrontendManager = null;
 	private EditText editTextBrowseTerm = null;
 
 	@Override
@@ -103,9 +104,11 @@ public class Main extends Activity {
 
 		ListView listViewSongs = (ListView) findViewById(R.id.listViewSongs);
 		ListView listViewVideos = (ListView) findViewById(R.id.listViewVideos);
+		ListView listViewImages = (ListView) findViewById(R.id.listViewImages);
 
 		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaManager, MediaType.AUDIO);
 		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaManager, MediaType.VIDEO);
+		imagesFrontendManager = new MediaFrontendManager(this, listViewImages, imageViewerDeviceManager, mediaManager, MediaType.IMAGES);
 	}
 
 	private void initializeEditTextBrowseTerm() {
