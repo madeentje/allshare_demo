@@ -19,13 +19,14 @@ import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
 
 import dimitri.suls.allshare.R;
+import dimitri.suls.allshare.activities.helpers.InitializeManager;
+import dimitri.suls.allshare.activities.helpers.TabManager;
 import dimitri.suls.allshare.avplayer.frontend.managers.MediaFrontendManager;
 import dimitri.suls.allshare.avplayer.model.managers.MediaManager;
 import dimitri.suls.allshare.avplayer.model.managers.MediaManager.MediaType;
 import dimitri.suls.allshare.device.frontend.manager.DeviceFrontendManager;
 import dimitri.suls.allshare.device.model.manager.DeviceCommand;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
-import dimitri.suls.allshare.helpers.frontend.TabManager;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderManager;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderObserver;
 import dimitri.suls.allshare.tv.listeners.TVTouchListener;
@@ -93,9 +94,8 @@ public class Main extends Activity {
 				textViewSelectedTVController, "TV-controller", tabManager, 1);
 		avPlayerDeviceFrontendManager = new DeviceFrontendManager(this, avPlayerDeviceManager, listViewAVPlayers, textViewSelectedAVPlayer,
 				"AV-player", tabManager, 2);
-		// TODO: Add tab for image-viewer
 		imageViewerDeviceFrontendManager = new DeviceFrontendManager(this, imageViewerDeviceManager, listViewImageViewers,
-				textViewSelectedImageViewer, "image-viewer", tabManager, 2);
+				textViewSelectedImageViewer, "image-viewer", tabManager, 3);
 	}
 
 	private void initializeEachMediaList() {

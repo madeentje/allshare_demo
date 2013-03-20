@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.sec.android.allshare.Device;
 
+import dimitri.suls.allshare.activities.helpers.TabManager;
 import dimitri.suls.allshare.device.frontend.listadapters.DeviceAdapter;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
 import dimitri.suls.allshare.device.model.manager.DeviceObserver;
-import dimitri.suls.allshare.helpers.frontend.TabManager;
 
 public class DeviceFrontendManager implements DeviceObserver {
 	private Context context = null;

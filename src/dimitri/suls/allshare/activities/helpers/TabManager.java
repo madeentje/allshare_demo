@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.helpers.frontend;
+package dimitri.suls.allshare.activities.helpers;
 
 import android.app.Activity;
 import android.view.View;
@@ -15,7 +15,7 @@ public class TabManager {
 
 		initializeTabHostMain();
 		initializeTabHostTV();
-		initializeTabHostAV();
+		initializeTabHostAVPlayer();
 	}
 
 	public void resetCurrentTab() {
@@ -43,10 +43,15 @@ public class TabManager {
 		tabSpecTV.setIndicator("TV");
 		tabHostMain.addTab(tabSpecTV);
 
-		TabSpec tabSpecAV = tabHostMain.newTabSpec("av");
-		tabSpecAV.setContent(R.id.tabAV);
-		tabSpecAV.setIndicator("AV");
-		tabHostMain.addTab(tabSpecAV);
+		TabSpec tabSpecAVPlayer = tabHostMain.newTabSpec("avPlayer");
+		tabSpecAVPlayer.setContent(R.id.tabAVPlayer);
+		tabSpecAVPlayer.setIndicator("AV-player");
+		tabHostMain.addTab(tabSpecAVPlayer);
+
+		TabSpec tabSpecImageViewer = tabHostMain.newTabSpec("imageViewer");
+		tabSpecImageViewer.setContent(R.id.tabImageViewer);
+		tabSpecImageViewer.setIndicator("Image viewer");
+		tabHostMain.addTab(tabSpecImageViewer);
 
 		return tabHostMain;
 	}
@@ -72,24 +77,24 @@ public class TabManager {
 		tabHostTV.addTab(tabSpecTVTouch);
 	}
 
-	private void initializeTabHostAV() {
-		TabHost tabHostAV = (TabHost) activity.findViewById(R.id.tabHostAV);
+	private void initializeTabHostAVPlayer() {
+		TabHost tabHostAVPlayer = (TabHost) activity.findViewById(R.id.tabHostAVPlayer);
 
-		tabHostAV.setup();
+		tabHostAVPlayer.setup();
 
-		TabSpec tabSpecAVSongs = tabHostAV.newTabSpec("avSongs");
-		tabSpecAVSongs.setContent(R.id.tabAVSongs);
-		tabSpecAVSongs.setIndicator("Songs");
-		tabHostAV.addTab(tabSpecAVSongs);
+		TabSpec tabSpecAVPlayerSongs = tabHostAVPlayer.newTabSpec("avPlayerSongs");
+		tabSpecAVPlayerSongs.setContent(R.id.tabAVPlayerSongs);
+		tabSpecAVPlayerSongs.setIndicator("Songs");
+		tabHostAVPlayer.addTab(tabSpecAVPlayerSongs);
 
-		TabSpec tabSpecAVVideos = tabHostAV.newTabSpec("avVideos");
-		tabSpecAVVideos.setContent(R.id.tabAVVideos);
-		tabSpecAVVideos.setIndicator("Videos");
-		tabHostAV.addTab(tabSpecAVVideos);
+		TabSpec tabSpecAVPlayerVideos = tabHostAVPlayer.newTabSpec("avPlayerVideos");
+		tabSpecAVPlayerVideos.setContent(R.id.tabAVPlayerVideos);
+		tabSpecAVPlayerVideos.setIndicator("Videos");
+		tabHostAVPlayer.addTab(tabSpecAVPlayerVideos);
 
-		TabSpec tabSpecAVControls = tabHostAV.newTabSpec("avControls");
-		tabSpecAVControls.setContent(R.id.tabAVControls);
-		tabSpecAVControls.setIndicator("Controls");
-		tabHostAV.addTab(tabSpecAVControls);
+		TabSpec tabSpecAVPlayerControls = tabHostAVPlayer.newTabSpec("avPlayerControls");
+		tabSpecAVPlayerControls.setContent(R.id.tabAVPlayerControls);
+		tabSpecAVPlayerControls.setIndicator("Controls");
+		tabHostAVPlayer.addTab(tabSpecAVPlayerControls);
 	}
 }

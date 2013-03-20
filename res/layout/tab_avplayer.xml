@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tabAV"
+    android:id="@+id/tabAVPlayer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <TabHost
-        android:id="@+id/tabHostAV"
+        android:id="@+id/tabHostAVPlayer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true" >
@@ -27,11 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <include layout="@layout/tab_av_songs" />
+                <include layout="@layout/tab_avplayer_songs" />
 
-                <include layout="@layout/tab_av_videos" />
+                <include layout="@layout/tab_avplayer_videos" />
 
-                <include layout="@layout/tab_av_controls" />
+                <include layout="@layout/tab_avplayer_controls" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>

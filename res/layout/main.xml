@@ -33,7 +33,9 @@
 
                 <include layout="@layout/tab_tv" />
 
-                <include layout="@layout/tab_av" />
+                <include layout="@layout/tab_avplayer" />
+
+                <include layout="@layout/tab_imageviewer" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>

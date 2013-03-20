@@ -1,5 +1,6 @@
-package dimitri.suls.allshare.activities;
+package dimitri.suls.allshare.activities.helpers;
 
+import dimitri.suls.allshare.activities.Main;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
