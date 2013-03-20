@@ -20,7 +20,7 @@
     <ListView
         android:id="@+id/listViewTVControllers"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:choiceMode="singleChoice"
         android:focusable="true"
         android:focusableInTouchMode="true" >
@@ -34,7 +34,7 @@
     <ListView
         android:id="@+id/listViewAVPlayers"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:choiceMode="singleChoice"
         android:focusable="true"
         android:focusableInTouchMode="true" >
@@ -48,7 +48,7 @@
     <ListView
         android:id="@+id/listViewImageViewers"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:focusable="true"
         android:focusableInTouchMode="true" >

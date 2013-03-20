@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.media.frontend.managers;
+package dimitri.suls.allshare.avplayer.frontend.managers;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import com.sec.android.allshare.Item;
 import com.sec.android.allshare.media.AVPlayer;
 import com.sec.android.allshare.media.ContentInfo;
 
+import dimitri.suls.allshare.avplayer.frontend.listadapters.MediaItemAdapter;
+import dimitri.suls.allshare.avplayer.model.managers.MediaManager;
+import dimitri.suls.allshare.avplayer.model.managers.MediaManager.MediaType;
 import dimitri.suls.allshare.device.model.manager.DeviceCommand;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
-import dimitri.suls.allshare.media.frontend.listadapters.MediaItemAdapter;
-import dimitri.suls.allshare.media.model.managers.MediaManager;
-import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
 
 public class MediaFrontendManager {
 	private Context context;

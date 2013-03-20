@@ -9,7 +9,11 @@ import com.sec.android.allshare.DeviceFinder;
 import com.sec.android.allshare.DeviceFinder.IDeviceFinderEventListener;
 import com.sec.android.allshare.ERROR;
 import com.sec.android.allshare.control.TVController;
+import com.sec.android.allshare.media.AVPlayer;
 
+import dimitri.suls.allshare.avplayer.listeners.AVPlayerEventListener;
+import dimitri.suls.allshare.avplayer.listeners.AVPlayerPlaybackResponseListener;
+import dimitri.suls.allshare.avplayer.listeners.AVPlayerVolumeResponseListener;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderManager;
 import dimitri.suls.allshare.tv.listeners.TVEventListener;
 import dimitri.suls.allshare.tv.listeners.TVResponseListener;
@@ -47,6 +51,15 @@ public class DeviceManager {
 				tvController.setResponseListener(new TVResponseListener());
 
 				tvController.connect();
+			} else if (selectedDevice.getDeviceType() == DeviceType.DEVICE_AVPLAYER) {
+				AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+				avPlayer.setEventListener(new AVPlayerEventListener());
+				avPlayer.setResponseListener(new AVPlayerPlaybackResponseListener());
+				avPlayer.setResponseListener(new AVPlayerVolumeResponseListener());
+
+				avPlayer.setVolume(20);
+				avPlayer.setMute(false);
 			}
 		}
 

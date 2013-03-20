@@ -1,4 +1,4 @@
-package dimitri.suls.allshare.media.model.managers;
+package dimitri.suls.allshare.avplayer.model.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,6 @@ public class MediaManager {
 	public MediaManager(Context context) {
 		this.context = context;
 	}
-
-	// TODO: Add volume-handler so user doesn't have to go to TV-tab to change
-	// the volume.
 
 	public List<Item> findAllMediaItems(MediaType mediaType) {
 		Uri uri = null;

@@ -5,33 +5,62 @@
     android:layout_height="match_parent" >
 
     <Button
-        android:id="@+id/buttonPauseMedia"
+        android:id="@+id/buttonPauseAVPlayer"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:onClick="pauseMediaEvent"
+        android:onClick="pauseAVPlayerEvent"
         android:text="Pause" />
 
     <Button
-        android:id="@+id/buttonResumeMedia"
+        android:id="@+id/buttonResumeAVPlayer"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/buttonPauseMedia"
-        android:onClick="resumeMediaEvent"
+        android:layout_toRightOf="@+id/buttonPauseAVPlayer"
+        android:onClick="resumeAVPlayerEvent"
         android:text="Resume" />
 
     <Button
-        android:id="@+id/buttonStopMedia"
+        android:id="@+id/buttonStopAVPlayer"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/buttonResumeMedia"
-        android:onClick="stopMediaEvent"
+        android:layout_toRightOf="@+id/buttonResumeAVPlayer"
+        android:onClick="stopAVPlayerEvent"
         android:text="Stop" />
+
+    <SeekBar
+        android:id="@+id/seekBarVolumeAVPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonPauseAVPlayer"
+        android:layout_marginTop="55dp"
+        android:max="100"
+        android:progress="20" />
+
+    <TextView
+        android:id="@+id/textViewVolumeAVPlayerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/seekBarVolumeAVPlayer"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="32dp"
+        android:text="Volume"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Switch
+        android:id="@+id/switchMuteAVPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/seekBarVolumeAVPlayer"
+        android:layout_marginTop="58dp"
+        android:text="Mute" />
 
 </RelativeLayout>
