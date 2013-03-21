@@ -7,21 +7,17 @@ import com.sec.android.allshare.media.AVPlayer.IAVPlayerVolumeResponseListener;
 public class AVPlayerVolumeResponseListener implements IAVPlayerVolumeResponseListener {
 	@Override
 	public void onGetMuteResponseReceived(boolean isMuted, ERROR error) {
-
 	}
 
 	@Override
 	public void onGetVolumeResponseReceived(int level, ERROR error) {
-
 	}
 
 	@Override
 	public void onSetMuteResponseReceived(boolean isMuted, ERROR error) {
-
 	}
 
 	@Override
 	public void onSetVolumeResponseReceived(int level, ERROR error) {
-
 	}
 }

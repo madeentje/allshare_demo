@@ -44,7 +44,7 @@ public class MediaManager {
 	}
 
 	private List<Item> getMediaItemsFromCursorToList(Cursor cursor) {
-		List<Item> songs = new ArrayList<Item>();
+		List<Item> mediaItems = new ArrayList<Item>();
 
 		String filePath = null;
 		String mimeType = null;
@@ -62,11 +62,11 @@ public class MediaManager {
 
 			item = localContentBuilder.build();
 
-			songs.add(item);
+			mediaItems.add(item);
 		}
 
 		cursor.close();
 
-		return songs;
+		return mediaItems;
 	}
 }

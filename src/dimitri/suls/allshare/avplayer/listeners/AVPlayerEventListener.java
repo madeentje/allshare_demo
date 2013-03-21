@@ -8,6 +8,5 @@ import com.sec.android.allshare.media.AVPlayer.IAVPlayerEventListener;
 public class AVPlayerEventListener implements IAVPlayerEventListener {
 	@Override
 	public void onDeviceChanged(AVPlayerState avPlayerState, ERROR error) {
-
 	}
 }

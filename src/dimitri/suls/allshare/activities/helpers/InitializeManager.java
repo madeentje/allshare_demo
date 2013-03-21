@@ -1,6 +1,5 @@
 package dimitri.suls.allshare.activities.helpers;
 
-import dimitri.suls.allshare.activities.Main;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import dimitri.suls.allshare.activities.Main;
 
 public class InitializeManager {
 	private Main mainActivity = null;
@@ -33,7 +33,9 @@ public class InitializeManager {
 				}
 			}
 		};
+	}
 
+	public void start() {
 		IntentFilter intentFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
 		this.mainActivity.registerReceiver(broadcastReceiver, intentFilter);

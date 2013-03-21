@@ -8,11 +8,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.sec.android.allshare.Device;
 import com.sec.android.allshare.Item;
-import com.sec.android.allshare.media.AVPlayer;
 import com.sec.android.allshare.media.ContentInfo;
-import com.sec.android.allshare.media.ImageViewer;
 
 import dimitri.suls.allshare.device.model.manager.DeviceCommand;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
@@ -23,44 +20,45 @@ import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
 public class MediaFrontendManager {
 	private Context context;
 	private ListView listViewMedia;
-	private DeviceManager deviceManager;
 	private MediaManager mediaManager;
 	private MediaType mediaType;
 
-	private class MediaListItemClickListener implements OnItemClickListener {
+	public static abstract class MediaListItemClickListener implements OnItemClickListener {
 		private Item selectedItem;
 		private ContentInfo contentInfo;
+
+		public Item getSelectedItem() {
+			return selectedItem;
+		}
+
+		public ContentInfo getContentInfo() {
+			return contentInfo;
+		}
 
 		@Override
 		public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 			this.selectedItem = (Item) adapterView.getItemAtPosition(position);
 			this.contentInfo = new ContentInfo.Builder().build();
 
-			deviceManager.execute(new DeviceCommand() {
-				@Override
-				public void execute(Device selectedDevice) {
-					if (mediaType == MediaType.IMAGES) {
-						ImageViewer imageViewer = (ImageViewer) selectedDevice;
+			DeviceManager deviceManager = getDeviceManager();
+			DeviceCommand deviceCommand = getDeviceCommand();
 
-						imageViewer.show(selectedItem, contentInfo);
-					} else {
-						AVPlayer avPlayer = (AVPlayer) selectedDevice;
-
-						avPlayer.play(selectedItem, contentInfo);
-					}
-				}
-			});
+			deviceManager.execute(deviceCommand);
 		}
+
+		public abstract DeviceManager getDeviceManager();
+
+		public abstract DeviceCommand getDeviceCommand();
 	}
 
-	public MediaFrontendManager(Context context, ListView listViewMedia, DeviceManager deviceManager, MediaManager mediaManager, MediaType mediaType) {
+	public MediaFrontendManager(Context context, ListView listViewMedia, MediaListItemClickListener mediaListItemClickListener,
+			MediaManager mediaManager, MediaType mediaType) {
 		this.context = context;
 		this.listViewMedia = listViewMedia;
-		this.deviceManager = deviceManager;
 		this.mediaManager = mediaManager;
 		this.mediaType = mediaType;
 
-		listViewMedia.setOnItemClickListener(new MediaListItemClickListener());
+		listViewMedia.setOnItemClickListener(mediaListItemClickListener);
 
 		refreshMediaList();
 	}

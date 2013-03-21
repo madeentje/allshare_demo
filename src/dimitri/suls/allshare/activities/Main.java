@@ -17,6 +17,7 @@ import com.sec.android.allshare.Device.DeviceType;
 import com.sec.android.allshare.control.TVController;
 import com.sec.android.allshare.control.TVController.RemoteKey;
 import com.sec.android.allshare.media.AVPlayer;
+import com.sec.android.allshare.media.ImageViewer;
 
 import dimitri.suls.allshare.R;
 import dimitri.suls.allshare.activities.helpers.InitializeManager;
@@ -25,6 +26,7 @@ import dimitri.suls.allshare.device.frontend.manager.DeviceFrontendManager;
 import dimitri.suls.allshare.device.model.manager.DeviceCommand;
 import dimitri.suls.allshare.device.model.manager.DeviceManager;
 import dimitri.suls.allshare.media.frontend.managers.MediaFrontendManager;
+import dimitri.suls.allshare.media.frontend.managers.MediaFrontendManager.MediaListItemClickListener;
 import dimitri.suls.allshare.media.model.managers.MediaManager;
 import dimitri.suls.allshare.media.model.managers.MediaManager.MediaType;
 import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderManager;
@@ -32,6 +34,8 @@ import dimitri.suls.allshare.serviceprovider.model.managers.ServiceProviderObser
 import dimitri.suls.allshare.tv.listeners.TVTouchListener;
 
 public class Main extends Activity {
+	private TabManager tabManager = null;
+	private MediaManager mediaManager = null;
 	private ServiceProviderManager serviceProviderManager = null;
 	private DeviceManager tvControllerDeviceManager = null;
 	private DeviceManager avPlayerDeviceManager = null;
@@ -39,12 +43,11 @@ public class Main extends Activity {
 	private DeviceFrontendManager tvControllerDeviceFrontendManager = null;
 	private DeviceFrontendManager avPlayerDeviceFrontendManager = null;
 	private DeviceFrontendManager imageViewerDeviceFrontendManager = null;
-	private TabManager tabManager = null;
+	private EditText editTextBrowseTerm = null;
 	// TODO: Reference needed for MediaFrontendManagers?
 	private MediaFrontendManager songsFrontendManager = null;
 	private MediaFrontendManager videosFrontendManager = null;
 	private MediaFrontendManager imagesFrontendManager = null;
-	private EditText editTextBrowseTerm = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,11 @@ public class Main extends Activity {
 		setContentView(R.layout.main);
 
 		tabManager = new TabManager(this);
+		mediaManager = new MediaManager(this);
 
 		InitializeManager initializeManager = new InitializeManager(this);
+
+		initializeManager.start();
 	}
 
 	@Override
@@ -65,6 +71,7 @@ public class Main extends Activity {
 
 	public void initialize() throws Exception {
 		serviceProviderManager = new ServiceProviderManager(this);
+
 		serviceProviderManager.addObserver(new ServiceProviderObserver() {
 			@Override
 			public void createdServiceProvider() {
@@ -100,15 +107,55 @@ public class Main extends Activity {
 	}
 
 	private void initializeEachMediaList() {
-		MediaManager mediaManager = new MediaManager(this);
-
 		ListView listViewSongs = (ListView) findViewById(R.id.listViewSongs);
 		ListView listViewVideos = (ListView) findViewById(R.id.listViewVideos);
 		ListView listViewImages = (ListView) findViewById(R.id.listViewImages);
 
-		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avPlayerDeviceManager, mediaManager, MediaType.AUDIO);
-		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avPlayerDeviceManager, mediaManager, MediaType.VIDEO);
-		imagesFrontendManager = new MediaFrontendManager(this, listViewImages, imageViewerDeviceManager, mediaManager, MediaType.IMAGES);
+		MediaListItemClickListener avListItemClickListener = new MediaListItemClickListener() {
+			@Override
+			public DeviceManager getDeviceManager() {
+				return avPlayerDeviceManager;
+			}
+
+			@Override
+			public DeviceCommand getDeviceCommand() {
+				DeviceCommand deviceCommand = new DeviceCommand() {
+					@Override
+					public void execute(Device selectedDevice) {
+						AVPlayer avPlayer = (AVPlayer) selectedDevice;
+
+						avPlayer.play(getSelectedItem(), getContentInfo());
+					}
+				};
+
+				return deviceCommand;
+			}
+		};
+
+		MediaListItemClickListener imageListItemClickListener = new MediaListItemClickListener() {
+			@Override
+			public DeviceManager getDeviceManager() {
+				return imageViewerDeviceManager;
+			}
+
+			@Override
+			public DeviceCommand getDeviceCommand() {
+				DeviceCommand deviceCommand = new DeviceCommand() {
+					@Override
+					public void execute(Device selectedDevice) {
+						ImageViewer imageViewer = (ImageViewer) selectedDevice;
+
+						imageViewer.show(getSelectedItem(), getContentInfo());
+					}
+				};
+
+				return deviceCommand;
+			}
+		};
+
+		songsFrontendManager = new MediaFrontendManager(this, listViewSongs, avListItemClickListener, mediaManager, MediaType.AUDIO);
+		videosFrontendManager = new MediaFrontendManager(this, listViewVideos, avListItemClickListener, mediaManager, MediaType.VIDEO);
+		imagesFrontendManager = new MediaFrontendManager(this, listViewImages, imageListItemClickListener, mediaManager, MediaType.IMAGES);
 	}
 
 	private void initializeEditTextBrowseTerm() {

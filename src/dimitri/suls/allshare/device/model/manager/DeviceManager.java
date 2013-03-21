@@ -44,14 +44,14 @@ public class DeviceManager {
 
 		if (selectedDevice != null) {
 			// TODO: Finish adding other devicetypes
-			if (selectedDevice.getDeviceType() == DeviceType.DEVICE_TV_CONTROLLER) {
+			if (deviceType == DeviceType.DEVICE_TV_CONTROLLER) {
 				TVController tvController = (TVController) selectedDevice;
 
 				tvController.setEventListener(new TVEventListener());
 				tvController.setResponseListener(new TVResponseListener());
 
 				tvController.connect();
-			} else if (selectedDevice.getDeviceType() == DeviceType.DEVICE_AVPLAYER) {
+			} else if (deviceType == DeviceType.DEVICE_AVPLAYER) {
 				AVPlayer avPlayer = (AVPlayer) selectedDevice;
 
 				avPlayer.setEventListener(new AVPlayerEventListener());

@@ -11,41 +11,33 @@ import com.sec.android.allshare.media.MediaInfo;
 public class AVPlayerPlaybackResponseListener implements IAVPlayerPlaybackResponseListener {
 	@Override
 	public void onGetMediaInfoResponseReceived(MediaInfo mediaInfo, ERROR error) {
-
 	}
 
 	@Override
 	public void onGetPlayPositionResponseReceived(long position, ERROR error) {
-
 	}
 
 	@Override
 	public void onGetStateResponseReceived(AVPlayerState avPlayerState, ERROR error) {
-
 	}
 
 	@Override
 	public void onPauseResponseReceived(ERROR error) {
-
 	}
 
 	@Override
 	public void onPlayResponseReceived(Item item, ContentInfo contentInfo, ERROR error) {
-
 	}
 
 	@Override
 	public void onResumeResponseReceived(ERROR error) {
-
 	}
 
 	@Override
 	public void onSeekResponseReceived(long requestedPosition, ERROR error) {
-
 	}
 
 	@Override
 	public void onStopResponseReceived(ERROR error) {
-
 	}
 }

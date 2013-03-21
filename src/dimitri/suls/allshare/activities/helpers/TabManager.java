@@ -28,32 +28,24 @@ public class TabManager {
 		childTab.setEnabled(isEnabled);
 	}
 
-	private TabHost initializeTabHostMain() {
+	private void createNewTab(TabHost tabHost, int contentId, String tag, String title) {
+		TabSpec tabSpec = tabHost.newTabSpec(tag);
+
+		tabSpec.setContent(contentId);
+		tabSpec.setIndicator(title);
+
+		tabHost.addTab(tabSpec);
+	}
+
+	private void initializeTabHostMain() {
 		tabHostMain = (TabHost) activity.findViewById(R.id.tabHostMain);
 
 		tabHostMain.setup();
 
-		TabSpec tabSpecDevices = tabHostMain.newTabSpec("devices");
-		tabSpecDevices.setContent(R.id.tabDevices);
-		tabSpecDevices.setIndicator("Devices");
-		tabHostMain.addTab(tabSpecDevices);
-
-		TabSpec tabSpecTV = tabHostMain.newTabSpec("tv");
-		tabSpecTV.setContent(R.id.tabTV);
-		tabSpecTV.setIndicator("TV");
-		tabHostMain.addTab(tabSpecTV);
-
-		TabSpec tabSpecAVPlayer = tabHostMain.newTabSpec("avPlayer");
-		tabSpecAVPlayer.setContent(R.id.tabAVPlayer);
-		tabSpecAVPlayer.setIndicator("AV-player");
-		tabHostMain.addTab(tabSpecAVPlayer);
-
-		TabSpec tabSpecImageViewer = tabHostMain.newTabSpec("imageViewer");
-		tabSpecImageViewer.setContent(R.id.tabImageViewer);
-		tabSpecImageViewer.setIndicator("Image viewer");
-		tabHostMain.addTab(tabSpecImageViewer);
-
-		return tabHostMain;
+		createNewTab(tabHostMain, R.id.tabDevices, "devices", "Devices");
+		createNewTab(tabHostMain, R.id.tabTV, "tv", "TV");
+		createNewTab(tabHostMain, R.id.tabAVPlayer, "avPlayer", "AV-player");
+		createNewTab(tabHostMain, R.id.tabImageViewer, "imageViewer", "Image viewer");
 	}
 
 	private void initializeTabHostTV() {
@@ -61,20 +53,9 @@ public class TabManager {
 
 		tabHostTV.setup();
 
-		TabSpec tabSpecTVRemote = tabHostTV.newTabSpec("tvRemote");
-		tabSpecTVRemote.setContent(R.id.tabTVRemote);
-		tabSpecTVRemote.setIndicator("Remote");
-		tabHostTV.addTab(tabSpecTVRemote);
-
-		TabSpec tabSpecTVBrowser = tabHostTV.newTabSpec("tvBrowser");
-		tabSpecTVBrowser.setContent(R.id.tabTVBrowser);
-		tabSpecTVBrowser.setIndicator("Browser");
-		tabHostTV.addTab(tabSpecTVBrowser);
-
-		TabSpec tabSpecTVTouch = tabHostTV.newTabSpec("tvTouch");
-		tabSpecTVTouch.setContent(R.id.tabTVTouch);
-		tabSpecTVTouch.setIndicator("Touch");
-		tabHostTV.addTab(tabSpecTVTouch);
+		createNewTab(tabHostTV, R.id.tabTVRemote, "tvRemote", "Remote");
+		createNewTab(tabHostTV, R.id.tabTVBrowser, "tvBrowser", "Browser");
+		createNewTab(tabHostTV, R.id.tabTVTouch, "tvTouch", "Touch");
 	}
 
 	private void initializeTabHostAVPlayer() {
@@ -82,19 +63,8 @@ public class TabManager {
 
 		tabHostAVPlayer.setup();
 
-		TabSpec tabSpecAVPlayerSongs = tabHostAVPlayer.newTabSpec("avPlayerSongs");
-		tabSpecAVPlayerSongs.setContent(R.id.tabAVPlayerSongs);
-		tabSpecAVPlayerSongs.setIndicator("Songs");
-		tabHostAVPlayer.addTab(tabSpecAVPlayerSongs);
-
-		TabSpec tabSpecAVPlayerVideos = tabHostAVPlayer.newTabSpec("avPlayerVideos");
-		tabSpecAVPlayerVideos.setContent(R.id.tabAVPlayerVideos);
-		tabSpecAVPlayerVideos.setIndicator("Videos");
-		tabHostAVPlayer.addTab(tabSpecAVPlayerVideos);
-
-		TabSpec tabSpecAVPlayerControls = tabHostAVPlayer.newTabSpec("avPlayerControls");
-		tabSpecAVPlayerControls.setContent(R.id.tabAVPlayerControls);
-		tabSpecAVPlayerControls.setIndicator("Controls");
-		tabHostAVPlayer.addTab(tabSpecAVPlayerControls);
+		createNewTab(tabHostAVPlayer, R.id.tabAVPlayerSongs, "avPlayerSongs", "Songs");
+		createNewTab(tabHostAVPlayer, R.id.tabAVPlayerVideos, "avPlayerVideos", "Videos");
+		createNewTab(tabHostAVPlayer, R.id.tabAVPlayerControls, "avPlayerControls", "Controls");
 	}
 }
