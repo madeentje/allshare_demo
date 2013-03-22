@@ -69,6 +69,6 @@ public class MediaFrontendManager {
 
 		listViewMedia.setAdapter(mediaItemAdapter);
 		// TODO: Implement observers for mediaItems, just like with devices.
-		// mediaManager.setSelectedSong(null);
+		// mediaManager.setSelectedMediaItem(null);
 	}
 }

@@ -59,6 +59,7 @@ public class InitializeManager {
 		alertDialog.setCancelable(false);
 		alertDialog.setMessage("Error occured: \r\n" + message);
 
+		// TODO: Fix bug when pressing Exit, the app closes but still crashes.
 		alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Exit", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
