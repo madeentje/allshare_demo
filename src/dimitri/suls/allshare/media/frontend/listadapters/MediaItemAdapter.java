@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sec.android.allshare.Item;
+import com.sec.android.allshare.Item.MediaType;
 
 import dimitri.suls.allshare.R;
 
@@ -38,31 +40,37 @@ public class MediaItemAdapter extends ArrayAdapter<Item> {
 
 		final ImageView imageViewThumbnail = (ImageView) view.findViewById(R.id.imageViewThumbnail);
 
-		AsyncTask<Item, Void, Bitmap> bitmapLoader = new AsyncTask<Item, Void, Bitmap>() {
-			@Override
-			protected Bitmap doInBackground(Item... mediaItems) {
-				Item mediaItem = mediaItems[0];
-				String filePath = mediaItem.getURI().getPath();
+		Uri thumbnailUri = mediaItem.getThumbnail();
 
-				Bitmap bitmap = null;
+		if (thumbnailUri != null) {
+			imageViewThumbnail.setImageURI(thumbnailUri);
+		} else if (mediaItem.getType() == MediaType.ITEM_IMAGE) {
+			AsyncTask<Item, Void, Bitmap> bitmapLoader = new AsyncTask<Item, Void, Bitmap>() {
+				@Override
+				protected Bitmap doInBackground(Item... mediaItems) {
+					Item mediaItem = mediaItems[0];
+					String filePath = mediaItem.getURI().getPath();
 
-				try {
-					bitmap = getBitmap(filePath);
-				} catch (Exception exception) {
+					Bitmap bitmap = null;
+
+					try {
+						bitmap = getBitmap(filePath);
+					} catch (Exception exception) {
+					}
+
+					return bitmap;
 				}
 
-				return bitmap;
-			}
+				@Override
+				protected void onPostExecute(Bitmap result) {
+					imageViewThumbnail.setImageBitmap(result);
 
-			@Override
-			protected void onPostExecute(Bitmap result) {
-				imageViewThumbnail.setImageBitmap(result);
+					super.onPostExecute(result);
+				}
+			};
 
-				super.onPostExecute(result);
-			}
-		};
-
-		bitmapLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
+			bitmapLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaItem);
+		}
 
 		return view;
 	}

@@ -1,6 +1,7 @@
 package dimitri.suls.allshare.device.model.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.sec.android.allshare.Device;
@@ -22,7 +23,7 @@ public class DeviceManager {
 	private List<DeviceObserver> deviceObservers = null;
 	private DeviceType deviceType = null;
 	private DeviceFinder deviceFinder = null;
-	private List<Device> devices = null;
+	private HashMap<String, Device> devices = null;
 	private Device selectedDevice = null;
 
 	public DeviceManager(DeviceType deviceType, ServiceProviderManager serviceProviderManager) {
@@ -70,16 +71,16 @@ public class DeviceManager {
 		deviceFinder.setDeviceFinderEventListener(deviceType, new IDeviceFinderEventListener() {
 			@Override
 			public void onDeviceAdded(DeviceType deviceType, Device device, ERROR error) {
-				devices.add(device);
+				if (!devices.containsKey(device.getIPAddress())) {
+					devices.put(device.getIPAddress(), device);
 
-				// TODO: Bug when device is added twice after sleeping, or
-				// turning Wi-FI on.. (not sure why)
-				notifyDeviceWasAdded(device);
+					notifyDeviceWasAdded(device);
+				}
 			}
 
 			@Override
 			public void onDeviceRemoved(DeviceType deviceType, Device device, ERROR error) {
-				devices.remove(device);
+				devices.remove(device.getIPAddress());
 
 				notifyDeviceWasRemoved(device);
 
@@ -89,9 +90,15 @@ public class DeviceManager {
 			}
 		});
 
-		devices = deviceFinder.getDevices(deviceType);
+		devices = new HashMap<String, Device>();
 
-		return devices;
+		ArrayList<Device> initialDeviceList = deviceFinder.getDevices(deviceType);
+
+		for (Device device : initialDeviceList) {
+			devices.put(device.getIPAddress(), device);
+		}
+
+		return initialDeviceList;
 	}
 
 	private void notifySelectedDeviceHasChanged() {
