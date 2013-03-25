@@ -38,6 +38,7 @@ public class InitializeManager {
 	public void start() {
 		IntentFilter intentFilter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
+		// TODO: Unregister broadcastReceiver?
 		this.mainActivity.registerReceiver(broadcastReceiver, intentFilter);
 	}
 
@@ -59,7 +60,6 @@ public class InitializeManager {
 		alertDialog.setCancelable(false);
 		alertDialog.setMessage("Error occured: \r\n" + message);
 
-		// TODO: Fix bug when pressing Exit, the app closes but still crashes.
 		alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Exit", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

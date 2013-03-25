@@ -164,7 +164,7 @@ public class Main extends Activity {
 		editTextBrowseTerm = (EditText) findViewById(R.id.editTextBrowseTerm);
 	}
 
-	// TODO: Add slider to adjust speed of motion-control.
+	// TODO: Add slider to adjust speed of motion-control?
 	private void initializeTVTouchListener() {
 		View tabTouch = findViewById(R.id.tabTVTouch);
 
@@ -222,8 +222,6 @@ public class Main extends Activity {
 			}
 		});
 	}
-
-	// TODO: Add button to disconnect from the selected device
 
 	public void refreshDeviceListEvent(View view) {
 		tvControllerDeviceFrontendManager.refreshDeviceList();
