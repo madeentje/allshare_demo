@@ -36,6 +36,8 @@ public class MediaItemAdapter extends ArrayAdapter<Item> {
 		View view = layoutInflater.inflate(R.layout.mediaitem_view, null);
 
 		TextView textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
+		// TODO: Add artist, album, .. for audio files. Not possible at the
+		// moment, due to AllShare restrictions on Item-class.
 		textViewTitle.setText(mediaItem.getTitle());
 
 		final ImageView imageViewThumbnail = (ImageView) view.findViewById(R.id.imageViewThumbnail);

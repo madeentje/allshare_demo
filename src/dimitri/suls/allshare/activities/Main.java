@@ -64,7 +64,9 @@ public class Main extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		serviceProviderManager.close();
+		if (serviceProviderManager != null) {
+			serviceProviderManager.close();
+		}
 
 		super.onDestroy();
 	}
